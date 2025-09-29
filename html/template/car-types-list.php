@@ -75,8 +75,8 @@ include "../../includes/session.php";
 					<div class="page-header">
 						<div class="add-item d-flex">
 							<div class="page-title">
-								<h4 class="fw-bold">Category</h4>
-								<h6>Manage your categories</h6>
+								<h4 class="fw-bold">Car Types</h4>
+								<h6>Manage your car types</h6>
 							</div>
 						</div>
 						<ul class="table-top-head">
@@ -94,7 +94,7 @@ include "../../includes/session.php";
 							</li>
 						</ul>
 						<div class="page-btn">
-							<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category"><i class="ti ti-circle-plus me-1"></i>Add Category</a>
+							<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category"><i class="ti ti-circle-plus me-1"></i>Add Car Type</a>
 						</div>
 					</div>
 					<!-- /product list -->
@@ -133,8 +133,8 @@ include "../../includes/session.php";
 													<span class="checkmarks"></span>
 												</label>
 											</th>
-											<th>Category</th>
-											<th>Category slug</th>
+											<th>Car Type</th>
+											<th>Car Type slug</th>
 											<th>Created On</th>
 											<th>Status</th>
 											<th class="no-sort"></th>
@@ -164,7 +164,7 @@ include "../../includes/session.php";
 					<div class="modal-content">
 					<div class="modal-header">
 						<div class="page-title">
-						<h4>Add Category</h4>
+						<h4>Add Car Type</h4>
 						</div>
 						<button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal">
 						<span>&times;</span>
@@ -173,7 +173,7 @@ include "../../includes/session.php";
 					<form id="addCategoryForm">
 						<div class="modal-body">
 						<div class="mb-3">
-							<label class="form-label">Category<span class="text-danger ms-1">*</span></label>
+							<label class="form-label">Car Type<span class="text-danger ms-1">*</span></label>
 							<input type="text" class="form-control" name="category_name">
 						</div>
 						<div class="mb-0">
@@ -187,7 +187,7 @@ include "../../includes/session.php";
 						<div class="modal-footer">
 						<button type="button" class="btn me-2 btn-secondary" data-bs-dismiss="modal">Cancel</button>
 						<button  class="btn btn-primary" id="addCategoryBtn">
-							<span class="btn-text">Add Category</span>
+							<span class="btn-text">Add Car Type</span>
 							<span class="spinner-border spinner-border-sm d-none"></span>
 						</button>
 						</div>
@@ -196,13 +196,13 @@ include "../../includes/session.php";
 				</div>
 				</div>
 
-				<!-- Edit Category -->
+				<!-- Edit Car Type -->
 				<div class="modal fade" id="edit-category">
 				<div class="modal-dialog modal-dialog-centered">
 					<div class="modal-content">
 					<div class="modal-header">
 						<div class="page-title">
-						<h4>Edit Category</h4>
+						<h4>Edit Car Type</h4>
 						</div>
 						<button type="button" class="close bg-danger text-white fs-16" data-bs-dismiss="modal">
 						<span>&times;</span>
@@ -212,7 +212,7 @@ include "../../includes/session.php";
 						<div class="modal-body">
 						<input type="hidden" id="editCategoryId">
 						<div class="mb-3">
-							<label class="form-label">Category<span class="text-danger ms-1">*</span></label>
+							<label class="form-label">Car Type<span class="text-danger ms-1">*</span></label>
 							<input type="text" id="editCategoryName" class="form-control">
 						</div>
 						<div class="mb-0">
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Fetch Categories
     function fetchCategories() {
-        fetch("process/category_process.php", {
+        fetch("process/cartype_process.php", {
             method: "POST",
             headers: {"Content-Type": "application/x-www-form-urlencoded"},
             body: new URLSearchParams({ action: "fetch" })
@@ -298,19 +298,19 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <span class="checkmarks"></span>
                                 </label>
                             </td>
-                            <td><span class="text-gray-9">${cat.category_name}</span></td>
-                            <td>${cat.category_unique_id}</td>
+                            <td><span class="text-gray-9">${cat.car_name}</span></td>
+                            <td>${cat.car_uniqe_id}</td>
                             <td>${cat.created_at}</td>
                             <td><span class="badge ${cat.status === "Active" ? "bg-success" : "bg-danger"}">${cat.status}</span></td>
                             <td>
                                 <div class="edit-delete-action">
                                     <a href="#" class="me-2 p-2 editBtn"
-                                        data-id="${cat.category_id}"
-                                        data-name="${cat.category_name}"
+                                        data-id="${cat.car_id}"
+                                        data-name="${cat.car_name}"
                                         data-status="${cat.status}">
                                         <i data-feather="edit"></i>
                                     </a>
-                                    <a href="#" class="p-2 deleteBtn" data-id="${cat.category_id}">
+                                    <a href="#" class="p-2 deleteBtn" data-id="${cat.car_id}">
                                         <i data-feather="trash-2"></i>
                                     </a>
                                 </div>
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let name = this.querySelector("input[name=category_name]").value;
             let status = document.getElementById("addStatus").checked ? "1" : "0";
 
-            fetch("process/category_process.php", {
+            fetch("process/cartype_process.php", {
                 method: "POST",
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 body: new URLSearchParams({ action: "add", name, status })
@@ -367,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .finally(() => {
                 btn.disabled = false;
-                btnText.textContent = "Add Category";
+                btnText.textContent = "Add Car Type";
                 spinner.classList.add("d-none");
             });
         });
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let name = document.getElementById("editCategoryName").value;
             let status = document.getElementById("editStatus").checked ? "1" : "0";
 
-            fetch("process/category_process.php", {
+            fetch("process/cartype_process.php", {
                 method: "POST",
                 headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 body: new URLSearchParams({ action: "edit", id, name, status })
@@ -440,8 +440,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (e.target.closest(".deleteBtn")) {
             e.preventDefault();
             let id = e.target.closest(".deleteBtn").dataset.id;
-            if (confirm("Delete this category?")) {
-                fetch("process/category_process.php", {
+            if (confirm("Delete this car type?")) {
+                fetch("process/cartype_process.php", {
                     method: "POST",
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     body: new URLSearchParams({ action: "delete", id })

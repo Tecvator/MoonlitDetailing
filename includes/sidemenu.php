@@ -96,6 +96,7 @@
 						<li class="submenu-open">
 							<h6 class="submenu-hdr">Product/Category</h6>
 							<ul>
+                                <li><a href="car-types-list.php"><i class="ti ti-car fs-16 me-2"></i><span>Car Types</span></a></li>
 								<li><a href="product-list.php"><i data-feather="box"></i><span>Products</span></a></li>
 								<li><a href="add-product.php"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
 								<li><a href="category-list.php"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>

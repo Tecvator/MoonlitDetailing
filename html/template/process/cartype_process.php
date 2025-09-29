@@ -6,8 +6,8 @@ header("Content-Type: application/json");
 $action = $_POST['action'] ?? '';
 switch ($action) {
     case "fetch":
-        $categories = getCategories($conn);
-        echo json_encode(["status" => "success", "data" => $categories]);
+        $cartypes = getCarTypes($conn);
+        echo json_encode(["status" => "success", "data" => $cartypes]);
         break;
 
     case "add":
@@ -19,10 +19,10 @@ switch ($action) {
             exit;
         }
 
-        if (addCategory($conn, $name, $status, $admin['id'])) {
+        if (addCarType($conn, $name, $status, $admin['id'])) {
             echo json_encode(["status" => "success", "message" => "Category added"]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Failed to add category"]);
+            echo json_encode(["status" => "error", "message" => "Failed to add Car type "]);
         }
         break;
 
@@ -30,9 +30,9 @@ switch ($action) {
         $id = intval($_POST['id']);
         $name = trim($_POST['name']);
         $status = ($_POST['status'] === "1") ? "Active" : "Inactive";
-
-        if (updateCategory($conn, $id, $name, $status)) {
-            echo json_encode(["status" => "success", "message" => "Category updated"]);
+        
+        if (updateCarType($conn, $id, $name, $status)) {
+            echo json_encode(["status" => "success", "message" => "Car type updated"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Update failed"]);
         }
@@ -40,8 +40,8 @@ switch ($action) {
 
     case "delete":
         $id = intval($_POST['id']);
-        if (deleteCategory($conn, $id)) {
-            echo json_encode(["status" => "success", "message" => "Category deleted"]);
+        if (deleteCarType($conn, $id)) {
+            echo json_encode(["status" => "success", "message" => "Car type  deleted"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Delete failed"]);
         }
