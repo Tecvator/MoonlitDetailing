@@ -10,6 +10,23 @@ function getSiteInfo($conn) {
     }
 }
 
+function updateSiteInfo($conn, $data) {
+    $stmt = $conn->prepare("UPDATE " . SITEINFO . " 
+        SET site_name=?, site_email=?, site_phone=?, site_logo=?, site_address=?, site_state=?, site_city=? 
+        WHERE id=1");
+    $stmt->bind_param(
+        "sssssss",
+        $data['site_name'],
+        $data['site_email'],
+        $data['site_phone'],
+        $data['site_logo'],
+        $data['site_address'],
+        $data['site_state'],
+        $data['site_city']
+    );
+    return $stmt->execute();
+}
+
 
 function loginAdmin($conn, $email, $password) {
     $sql = "SELECT * FROM ".ADMINS." WHERE email = ? LIMIT 1";

@@ -50,14 +50,14 @@
 						<a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
 							<span class="user-info p-0">
 								<span class="user-letter">
-									<img src="assets/img/profiles/avator1.jpg" alt="Img" class="img-fluid">
+									<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" class="img-fluid">
 								</span>
 							</span>
 						</a>
 						<div class="dropdown-menu menu-drop-user">
 							<div class="profileset d-flex align-items-center">
 								<span class="user-img me-2">
-									<img src="assets/img/profiles/avator1.jpg" alt="Img">
+									<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
 								</span>
 								<div>
 									<h6 class="fw-medium"><?php echo($admin['username']);?></h6>

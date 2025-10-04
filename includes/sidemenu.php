@@ -100,8 +100,9 @@
 								<li><a href="product-list.php"><i data-feather="box"></i><span>Products</span></a></li>
 								<li><a href="add-product.php"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
 								<li><a href="category-list.php"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
-								<li><a href="sub-categories.php"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
+								<!--li><a href="sub-categories.php"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
 								<li><a href="brand-list.php"><i class="ti ti-triangles fs-16 me-2"></i><span>Product Features</span></a></li>
+-->
 							</ul>
 						</li>
 					
@@ -198,16 +199,9 @@
 									
 									</ul>
 								</li>
-								<li class="submenu">
-									<a href="javascript:void(0);"><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span><span class="menu-arrow"></span></a>
-									<ul>
-										<li><a href="system-settings.php">Change Logo</a></li>
-										<li><a href="company-settings.php">Chane Location </a></li>
-										<li><a href="localization-settings.php">Basic Info</a></li>
-									
-									</ul>
+							<li>
+									<a href="company-settings.php"><i class="ti ti-world fs-16 me-2"></i><span>Company Settings</span> </a>
 								</li>
-					
 								
 								<li>
 									<a href="signin.php"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
