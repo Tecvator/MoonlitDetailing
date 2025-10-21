@@ -12,17 +12,19 @@ function getSiteInfo($conn) {
 
 function updateSiteInfo($conn, $data) {
     $stmt = $conn->prepare("UPDATE " . SITEINFO . " 
-        SET site_name=?, site_email=?, site_phone=?, site_logo=?, site_address=?, site_state=?, site_city=? 
+        SET site_name=?, site_email=?, site_phone=?, site_logo=?, site_address=?, site_state=?, site_city=?, site_currency=?, site_mileage_price=?
         WHERE id=1");
     $stmt->bind_param(
-        "sssssss",
+        "sssssssss",
         $data['site_name'],
         $data['site_email'],
         $data['site_phone'],
         $data['site_logo'],
         $data['site_address'],
         $data['site_state'],
-        $data['site_city']
+        $data['site_city'],
+        $data['site_currency'],
+        $data['site_millage_price']
     );
     return $stmt->execute();
 }

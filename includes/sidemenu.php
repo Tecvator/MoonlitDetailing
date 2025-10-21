@@ -2,13 +2,13 @@
 			<!-- Logo -->
 			<div class="sidebar-logo active">
 				<a href="index.php" class="logo logo-normal">
-					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 50px">
 				</a>
 				<a href="index.php" class="logo logo-white">
-					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 50px">
 				</a>
 				<a href="index.php" class="logo-small">
-					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 50px">
 				</a>
 				<a id="toggle_btn" href="javascript:void(0);">
 					<i data-feather="chevrons-left" class="feather-16"></i>

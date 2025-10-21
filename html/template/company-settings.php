@@ -116,6 +116,26 @@ include "../../includes/session.php";
 													</h6>
 												</div>
 												<div class="row">
+															<div class="col-xl-6 col-lg-6 col-md-6">
+														<div class="mb-3">
+															<label class="form-label">
+																Company Currency  <span class="text-danger">*</span>
+															</label>
+															<input type="text" class="form-control"
+															 value="<?php echo $siteinfo['site_name'];?>" name="site_currency">
+														</div>
+													</div>
+													<div class="col-xl-6 col-lg-6 col-md-6">
+														<div class="mb-3">
+															<label class="form-label">
+																Price Per Millage<span class="text-danger">*</span>
+															</label>
+															<input type="number" name="site_millage_price" class="form-control"  value="<?php echo $siteinfo['site_email'];?>">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+											
 													<div class="col-xl-4 col-lg-6 col-md-4">
 														<div class="mb-3">
 															<label class="form-label">
@@ -203,29 +223,29 @@ include "../../includes/session.php";
 															<label class="form-label">
 																Address <span class="text-danger">*</span>
 															</label>
-															<input type="text" name="site_address" class="form-control"  value="<?php echo $siteinfo['site_address'];?>">
+															<input  id="autocomplete" type="text" name="site_address" class="form-control"  value="<?php echo $siteinfo['site_address'];?>">
 														</div>
 													</div>
 												
-													<div class="col-md-6">
-														<div class="mb-3">
-															<label class="form-label">
-																State <span class="text-danger">*</span>
-															</label>
-															<input type="text" name="site_state" class="form-control"  value="<?php echo $siteinfo['site_state'];?>">
+												<div class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">
+            State <span class="text-danger">*</span>
+        </label>
+        <input id="site_state"  disabled type="text" name="site_state" class="form-control" value="<?php echo $siteinfo['site_state'];?>">
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">
+            City <span class="text-danger">*</span>
+        </label>
+        <input id="site_city" disabled type="text" name="site_city" class="form-control" value="<?php echo $siteinfo['site_city'];?>">
+    </div>
+</div>
+<input type="hidden" id="site_lon" name="site_lon" value="<?php echo $siteinfo['site_lon']; ?>">
+<input type="hidden" id="site_lat" name="site_lat" value="<?php echo $siteinfo['site_lat']; ?>">
 
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="mb-3">
-															<label class="form-label">
-																City <span class="text-danger">*</span>
-															</label>
-														<input type="text" name="site_city" class="form-control"  value="<?php echo $siteinfo['site_city'];?>">
-
-														</div>
-													</div>
-													
 												</div>
 											</div>
 											<div class="text-end settings-bottom-btn mt-0">
@@ -306,6 +326,45 @@ document.querySelector("#siteInfoForm").addEventListener("submit", function(e) {
     }
 </script>
 
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $siteinfo['site_map_key'];?>&libraries=places"></script>
+<script>
+let autocomplete;
+
+function initAutocomplete() {
+    const input = document.getElementById('autocomplete');
+    autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['geocode'],
+        componentRestrictions: { country: 'za' } // Restrict to South Africa
+    });
+
+    autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+    const place = autocomplete.getPlace();
+    let state = '';
+    let city = '';
+
+    if (place.address_components) {
+        place.address_components.forEach(component => {
+            if (component.types.includes('administrative_area_level_1')) {
+                state = component.long_name;
+            }
+            if (component.types.includes('locality')) {
+                city = component.long_name;
+            }
+        });
+    }
+
+    document.getElementById('site_state').value = state;
+    document.getElementById('site_city').value = city;
+    document.getElementById('site_lat').value = place.geometry.location.lat();
+    document.getElementById('site_lon').value = place.geometry.location.lng();
+}
+
+window.onload = initAutocomplete;
+</script>
         <!-- Feather Icon JS -->
 		<script src="assets/js/feather.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
 

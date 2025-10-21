@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $targetFile = $uploadDir . $fileName;
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
-$baseUrl = $protocol . "://" . $host . "/moonlit_dashboard/html/template/process/";
+$baseUrl = $protocol . "://" . $host . "/html/template/process/";
 
         if (move_uploaded_file($tmpName, $targetFile)) {
             $logoPath = $targetFile;
@@ -22,6 +22,8 @@ $baseUrl = $protocol . "://" . $host . "/moonlit_dashboard/html/template/process
         // if no file uploaded, keep old logo
         $result = mysqli_query($conn, "SELECT site_logo FROM ".SITEINFO." WHERE id=1");
         $row = mysqli_fetch_assoc($result);
+        $baseUrl ="";
+
         $logoPath = $row['site_logo'];
     }
 

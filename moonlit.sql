@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 09, 2025 at 09:43 PM
+-- Generation Time: Oct 21, 2025 at 07:47 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.2.26
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
   `admin_unique_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `admin_unique_id` (`admin_unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `admins`
@@ -46,6 +46,22 @@ CREATE TABLE IF NOT EXISTS `admins` (
 INSERT INTO `admins` (`id`, `email`, `username`, `password`, `is_super_admin`, `admin_unique_id`) VALUES
 (1, 'lordphp319@gmail.com', 'John', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'yes', 'super_123'),
 (2, 'tino@gmail.com', 'Valentine', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'no', 'admin_1234');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_accounts`
+--
+
+DROP TABLE IF EXISTS `bank_accounts`;
+CREATE TABLE IF NOT EXISTS `bank_accounts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `bank_name` varchar(255) DEFAULT NULL,
+  `account_number` varchar(255) DEFAULT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -70,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `bookings`
@@ -98,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `car_types` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`car_id`),
   UNIQUE KEY `car_uniqe_id` (`car_uniqe_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `car_types`
@@ -126,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`category_id`),
   UNIQUE KEY `category_unique_id` (`category_unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `categories`
@@ -152,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `customers`
@@ -176,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `moonlit_admins` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -197,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `max_hours` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_unique_id` (`product_unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `products`
@@ -222,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `product_features` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `product_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -242,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `product_prices` (
   `car_type_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `price_unique_id` (`price_unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `product_prices`
@@ -273,20 +289,39 @@ CREATE TABLE IF NOT EXISTS `site_info` (
   `site_email` varchar(255) NOT NULL,
   `site_phone` varchar(255) NOT NULL,
   `site_city` varchar(255) NOT NULL,
+  `site_currency` varchar(50) DEFAULT NULL,
+  `site_mileage_price` varchar(20) DEFAULT NULL,
+  `site_map_key` varchar(255) DEFAULT 'AIzaSyDxpKBuxXpQRXU3XL97I4qqf2dbE_5M7Z0',
   `site_lat` varchar(255) NOT NULL,
   `site_lon` varchar(255) NOT NULL,
   `site_state` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `site_info`
 --
 
-INSERT INTO `site_info` (`id`, `site_name`, `site_logo`, `site_address`, `site_email`, `site_phone`, `site_city`, `site_lat`, `site_lon`, `site_state`, `created_at`, `updated_at`) VALUES
-(1, 'Moon Lit', 'http://localserver/moonlit_dashboard/html/template/process/uploads/1759861176_WhatsApp_Image_2025-09-25_at_1.02.04_PM.jpeg', 'kuru', 'lordphp319@gmail.com', '09024388386', 'Karu', '74673648934', '67930303', 'jokwoyi', '2025-09-28 07:38:30', '2025-09-28 07:38:30');
+INSERT INTO `site_info` (`id`, `site_name`, `site_logo`, `site_address`, `site_email`, `site_phone`, `site_city`, `site_currency`, `site_mileage_price`, `site_map_key`, `site_lat`, `site_lon`, `site_state`, `created_at`, `updated_at`) VALUES
+(1, 'Moon Lit', 'http://localserver/moonlit_dashboard/html/template/process/uploads/1759861176_WhatsApp_Image_2025-09-25_at_1.02.04_PM.jpeg', 'kuru', 'lordphp319@gmail.com', '09024388386', 'Karu', NULL, NULL, 'AIzaSyDxpKBuxXpQRXU3XL97I4qqf2dbE_5M7Z0', '74673648934', '67930303', 'jokwoyi', '2025-09-28 07:38:30', '2025-09-28 07:38:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `working_hours`
+--
+
+DROP TABLE IF EXISTS `working_hours`;
+CREATE TABLE IF NOT EXISTS `working_hours` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `day` varchar(255) DEFAULT NULL,
+  `open_time` varchar(255) DEFAULT NULL,
+  `close_time` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

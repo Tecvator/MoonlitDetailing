@@ -612,7 +612,9 @@ include "../../includes/session.php";
 		<!-- /Header -->
 
 		<!-- Sidebar -->
-			<?php include ("../../includes/sidemenu.php");?>
+			<?php include ("../../includes/sidemenu.php");
+      
+      ?>
 		<!-- /Sidebar -->
 
       <div class="page-wrapper">
@@ -654,7 +656,23 @@ include "../../includes/session.php";
               >
             </div>
           </div>
+  <?php
+  if (isset($_GET['id'])) {
+    $booking_id = intval($_GET['id']);
+    $booking = getBookingById($conn, $booking_id);
 
+    if ($booking) {
+        echo "<pre>";
+        print_r($booking);
+        echo "</pre>";
+    } else {
+        echo "Booking not found.";
+    }
+} else {
+    header("Location: index.php");
+    exit;
+}
+  ?>
           <!-- Invoices -->
           <div class="card">
             <div class="card-body">
@@ -664,24 +682,23 @@ include "../../includes/session.php";
                 <div class="col-md-6">
                   <div class="mb-2">
                     <img
-                      src="assets/img/logo.svg"
-                      width="130"
+                      src="<?php echo $siteinfo['site_logo'];?>"
+                      width="50"
                       class="img-fluid"
                       alt="logo"
                     />
                   </div>
-                  <p>3099 Kennedy Court Framingham, MA 01702</p>
                 </div>
                 <div class="col-md-6">
                   <div class="text-end mb-3">
                     <h5 class="text-gray mb-1">
-                      Invoice No <span class="text-primary">#INV0001</span>
+                      Invoice No <span class="text-primary">#<?php echo $booking['booking_id'];?></span>
                     </h5>
                     <p class="mb-1 fw-medium">
-                      Created Date : <span class="text-dark">Sep 24, 2024</span>
+                      Created Date : <span class="text-dark"><?php echo $booking['created_at'];?></span>
                     </p>
                     <p class="fw-medium">
-                      Due Date : <span class="text-dark">Sep 30, 2024</span>
+                      Due Date : <span class="text-dark"><?php echo $booking['washing_date'];?></span>
                     </p>
                   </div>
                 </div>

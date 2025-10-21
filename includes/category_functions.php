@@ -2,7 +2,7 @@
 function getCategories($conn) {
     $sql = "SELECT c.*, a.username 
             FROM ".CAT." c
-            LEFT JOIN ADMINS a ON c.category_added_by = a.id
+            LEFT JOIN " . ADMINS . "  a ON c.category_added_by = a.id
             ORDER BY c.created_at DESC";
     $result = mysqli_query($conn, $sql);
 

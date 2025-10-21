@@ -40,13 +40,7 @@ function deleteBooking($conn, $id) {
     return $stmt->execute();
 }
 
-function getBookingById($conn, $id) {
-    $query = "SELECT * FROM bookings WHERE id=?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    return $stmt->get_result()->fetch_assoc();
-}
+
 
 function getAllBookings($conn) {
     $query = "
@@ -85,5 +79,45 @@ function getAllBookings($conn) {
 
     return $bookings;
 }
+
+function getBookingById($conn, $id) {
+    $query = "
+        SELECT 
+            b.id,
+            b.booking_id,
+            b.car_type_id,
+            ct.car_name AS car_type,
+            b.product_id,
+            p.product_name AS product_name,
+            b.price,
+            b.location_type,
+            b.washing_date,
+            b.payment_method,
+            b.payment_status,
+            b.created_at,
+            c.name AS customer_name,
+            c.email AS customer_email,
+            c.phone AS customer_phone,
+            c.address AS customer_address
+        FROM bookings b
+        LEFT JOIN customers c ON b.customer_id = c.id
+        LEFT JOIN car_types ct ON b.car_type_id = ct.car_id
+        LEFT JOIN products p ON b.product_id = p.id
+        WHERE b.id = ?
+        LIMIT 1
+    ";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+
+    return null; // if no booking found
+}
+
 
 ?>

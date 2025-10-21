@@ -2,14 +2,14 @@
 			<div class="main-header">
 				<!-- Logo -->
 				<div class="header-left active">
-					<a href="index.php" class="logo logo-normal">
-						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<a href="index.php" class="logo logo-normal " style="height: 40px !important; weight: 40px">
+						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 40px">
 					</a>
-					<a href="index.php" class="logo logo-white">
-						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<a href="index.php" class="logo logo-white" style="height: 40px !important; weight: 40px">
+						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 40px">
 					</a>
-					<a href="index.php" class="logo-small">
-						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img">
+					<a href="index.php" class="logo-small" style="height: 40px !important; weight: 40px">
+						<img src="<?php echo $siteinfo['site_logo'];?>" alt="Img" style="height: 40px !important; weight: 40px">
 					</a>
 				</div>
 				<!-- /Logo -->
