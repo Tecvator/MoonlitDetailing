@@ -20,10 +20,10 @@ switch ($action) {
             exit;
         }
 
-        // 🕒 Convert hours (e.g. "2:30" → 150 mins)
-        $maxMinutes = convertTimeToMinutes($max_hours);
+        // Store as entered (e.g. "2:30" or "2")
+        $maxHoursToSave = $max_hours;
 
-        if (addProduct($conn, $categoryId, $name, $description, $prices, $maxMinutes, $admin['id'])) {
+        if (addProduct($conn, $categoryId, $name, $description, $prices, $maxHoursToSave, $admin['id'])) {
             echo json_encode(["status" => "success", "message" => "Product added"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Failed to add product"]);
@@ -39,10 +39,10 @@ switch ($action) {
         $prices = $_POST['prices'] ?? [];
         $max_hours = trim($_POST['product_hours']);
 
-        // 🕒 Convert to minutes before saving
-        $maxMinutes = convertTimeToMinutes($max_hours);
+        // Store as entered (keep format like "2:30")
+        $maxHoursToSave = $max_hours;
 
-        if (updateProduct($conn, $id, $categoryId, $name, $description, $prices, $maxMinutes, $admin['id'])) {
+        if (updateProduct($conn, $id, $categoryId, $name, $description, $prices, $maxHoursToSave, $admin['id'])) {
             echo json_encode(["status" => "success", "message" => "Product updated"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Update failed"]);
@@ -64,19 +64,4 @@ switch ($action) {
         echo json_encode(["status" => "error", "message" => "Invalid action"]);
         exit;
 }
-
-// 🔹 Helper: Convert time input like "2:30" → 150 minutes
-function convertTimeToMinutes($timeStr) {
-    if (strpos($timeStr, ':') !== false) {
-        list($h, $m) = array_map('intval', explode(':', $timeStr));
-        return $h * 60 + $m;
-    }
-    return intval($timeStr) * 60; // e.g. "2" → 120
-}
-
-// 🔹 Optional helper: Convert minutes → readable format (for display/fetch)
-function minutesToTimeFormat($minutes) {
-    $h = floor($minutes / 60);
-    $m = $minutes % 60;
-    return sprintf("%d:%02d", $h, $m);
-}
+?>

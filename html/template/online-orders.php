@@ -494,7 +494,7 @@ function fetchAvailableTimes() {
   });
 }
 
-// ✅ Show AM/PM formatted times
+// ✅ Show AM/PM formatted times from "HH:MM"
 function showAvailableTimes(times) {
   const select = document.getElementById("wash_time");
   const containerCol = select.closest(".col-lg-6");
@@ -502,12 +502,19 @@ function showAvailableTimes(times) {
   select.innerHTML = '<option value="">Select Time</option>';
 
   if (times.length > 0) {
-    times.forEach(hour => {
-      const option = document.createElement("option");
-      option.value = hour; // raw hour value (e.g., 14)
+    times.forEach(timeStr => {
+      // timeStr format: "14:30"
+      const [hourStr, minuteStr] = timeStr.split(':');
+      const hour = parseInt(hourStr, 10);
+      const minute = parseInt(minuteStr, 10);
+
       const period = hour >= 12 ? "PM" : "AM";
       const displayHour = hour % 12 || 12;
-      option.textContent = `${displayHour}:00 ${period}`;
+      const formattedTime = `${displayHour}:${minuteStr.padStart(2, "0")} ${period}`;
+
+      const option = document.createElement("option");
+      option.value = timeStr; // real value (e.g. "14:30")
+      option.textContent = formattedTime; // display (e.g. "2:30 PM")
       select.appendChild(option);
     });
     containerCol.classList.remove("d-none");
@@ -516,6 +523,7 @@ function showAvailableTimes(times) {
     showToast("error", "No available times for the selected date.");
   }
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
