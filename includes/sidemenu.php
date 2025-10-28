@@ -101,8 +101,8 @@
 								<li><a href="add-product.php"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
 								<li><a href="category-list.php"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
 								<!--li><a href="sub-categories.php"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
-								<li><a href="brand-list.php"><i class="ti ti-triangles fs-16 me-2"></i><span>Product Features</span></a></li>
--->
+								--><li><a href="product-feature-list.php"><i class="ti ti-triangles fs-16 me-2"></i><span>Product Features</span></a></li>
+
 							</ul>
 						</li>
 					

@@ -43,6 +43,149 @@ function addProduct($conn, $categoryId, $name, $description, $prices,  $max_hour
         return false;
     }
 }
+function addProductFeature($conn, $productId, $featureType, $feature) {
+    try {
+        // Determine which column should be true
+        $isInterior = ($featureType === 'interior') ? 1 : 0;
+        $isExterior = ($featureType === 'exterior') ? 1 : 0;
+        $isLimited  = ($featureType === 'limited') ? 1 : 0;
+        $isIncluded = ($featureType === 'inclusive') ? 1 : 0;
+
+        // Prepare SQL query
+        $stmt = $conn->prepare("
+            INSERT INTO " . PRODUCTFEATURES . " 
+            (product_id, feature, is_interior, is_exterior, is_limited, is_included, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
+        ");
+
+        $stmt->bind_param(
+            "ssiiii",
+            $productId,
+            $feature,
+            $isInterior,
+            $isExterior,
+            $isLimited,
+            $isIncluded
+        );
+
+        $stmt->execute();
+        $stmt->close();
+
+        return true;
+    } catch (Exception $e) {
+        error_log("Error adding product feature: " . $e->getMessage());
+        return false;
+    }
+}
+function fetchAllProductFeatures($conn, $productId = null) {
+    try {
+        $query = "
+            SELECT 
+                pf.*, 
+                p.id AS product_id, 
+                p.product_name 
+            FROM " . PRODUCTFEATURES . " pf
+            JOIN " . PRODUCTS . " p 
+                ON pf.product_id = p.id
+        ";
+
+        // Optional filter for a specific product
+        if ($productId) {
+            $query .= " WHERE pf.product_id = ?";
+        }
+
+        $query .= " ORDER BY pf.created_at DESC";
+
+        $stmt = $conn->prepare($query);
+
+        if ($productId) {
+            $stmt->bind_param("i", $productId);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $features = [];
+        while ($row = $result->fetch_assoc()) {
+            $features[] = $row;
+        }
+
+        $stmt->close();
+        return $features;
+    } catch (Exception $e) {
+        error_log("Error fetching all product features: " . $e->getMessage());
+        return [];
+    }
+}
+
+function updateProductFeature($conn, $id, $feature) {
+    try {
+        $featureType = 'a';
+        $isInterior = ($featureType === 'interior') ? 1 : 0;
+        $isExterior = ($featureType === 'exterior') ? 1 : 0;
+        $isLimited  = ($featureType === 'limited') ? 1 : 0;
+        $isIncluded = ($featureType === 'inclusive') ? 1 : 0;
+
+        $stmt = $conn->prepare("
+            UPDATE " . PRODUCTFEATURES . " 
+            SET feature = ?, 
+                updated_at = NOW()
+            WHERE id = ?
+        ");
+
+        $stmt->bind_param("si", $feature, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        return true;
+    } catch (Exception $e) {
+        error_log("Error updating product feature: " . $e->getMessage());
+        return false;
+    }
+}
+
+function deleteProductFeature($conn, $id) {
+    try {
+        $stmt = $conn->prepare("DELETE FROM " . PRODUCTFEATURES . " WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+
+        return true;
+    } catch (Exception $e) {
+        error_log("Error deleting product feature: " . $e->getMessage());
+        return false;
+    }
+}
+
+function fetchProductFeatureById($conn, $id) {
+    try {
+        $stmt = $conn->prepare("
+            SELECT 
+                pf.*, 
+                p.id AS product_id, 
+                p.product_name 
+            FROM " . PRODUCTFEATURES . " pf
+            JOIN " . PRODUCTS . " p 
+                ON pf.product_id = p.id
+            WHERE pf.id = ?
+            LIMIT 1
+        ");
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $feature = $result->fetch_assoc();
+        $stmt->close();
+
+        return $feature ?: null;
+    } catch (Exception $e) {
+        error_log('Error fetching product feature by ID: ' . $e->getMessage());
+        return null;
+    }
+}
+
+
 
 function updateProduct($conn, $id, $categoryId, $name, $description, $prices,  $max_hours, $admin) {
     try {
@@ -127,4 +270,214 @@ function getProductById($conn, $id) {
     }
 
     return $product;
+}
+
+function getFeatureType($featureRow) {
+    if ($featureRow['is_interior']) return "interior";
+    if ($featureRow['is_exterior']) return "exterior";
+    if ($featureRow['is_limited']) return "limited";
+    if ($featureRow['is_included']) return "inclusive";
+    return "unknown";
+}
+
+function getProductPlans($conn) {
+    // Step 1: Fetch all products
+    $sql = "SELECT 
+                p.id AS product_id,
+                p.product_name,
+                p.product_description,
+                p.product_unique_id,
+                p.max_hours,
+                c.category_name AS category,
+                a.username AS added_by
+            FROM " . PRODUCTS . " p
+            JOIN " . CAT . " c ON p.category_id = c.category_id 
+            JOIN " . ADMINS . " a ON p.product_added_by = a.id
+            ORDER BY p.id DESC";
+
+    $result = $conn->query($sql);
+
+    if (!$result || $result->num_rows === 0) {
+        return [];
+    }
+
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+        $productId = (int) $row['product_id'];
+
+        /* ------------------------------
+           STEP 2: FETCH FEATURES
+        ------------------------------ */
+        $features = [];
+        $featureQuery = "
+            SELECT 
+                feature,
+                is_interior,
+                is_exterior,
+                is_limited,
+                is_included
+            FROM " . PRODUCTFEATURES . "
+            WHERE product_id = ?
+            ORDER BY id ASC
+        ";
+
+        $stmt = $conn->prepare($featureQuery);
+        if ($stmt) {
+            $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $featureResult = $stmt->get_result();
+
+            while ($f = $featureResult->fetch_assoc()) {
+                $features[] = [
+                    "feature" => $f['feature'],
+                    "type" => getFeatureType($f)
+                ];
+            }
+
+            $stmt->close();
+        }
+
+        /* ------------------------------
+           STEP 3: FETCH PRICES
+        ------------------------------ */
+        $prices = [];
+        $priceQuery = "
+            SELECT 
+                pp.car_type_id, 
+                ct.car_name, 
+                pp.price
+            FROM product_prices pp
+            JOIN car_types ct ON pp.car_type_id = ct.car_id
+            WHERE pp.product_id = ?
+            ORDER BY ct.car_name ASC
+        ";
+
+        $stmt = $conn->prepare($priceQuery);
+        if ($stmt) {
+            $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $priceResult = $stmt->get_result();
+
+            while ($p = $priceResult->fetch_assoc()) {
+                $prices[] = [
+                    "car_id" => $p['car_type_id'],
+                    "car_name" => $p['car_name'],
+                    "price" => $p['price']
+                ];
+            }
+
+            $stmt->close();
+        }
+
+        /* ------------------------------
+           STEP 4: COMBINE EVERYTHING
+        ------------------------------ */
+        $row['features'] = $features;
+        $row['prices'] = $prices;
+        $products[] = $row;
+    }
+
+    return $products;
+}
+
+
+function getProductPlansTwo($conn, $carId) {
+    // Step 1: Fetch all products
+    $sql = "SELECT 
+                p.id AS product_id,
+                p.product_name,
+                p.product_description,
+                p.product_unique_id,
+                p.max_hours,
+                c.category_name AS category,
+                c.category_id AS categoryID,
+                a.username AS added_by
+            FROM " . PRODUCTS . " p
+            JOIN " . CAT . " c ON p.category_id = c.category_id 
+            JOIN " . ADMINS . " a ON p.product_added_by = a.id
+            ORDER BY p.id DESC";
+
+    $result = $conn->query($sql);
+
+    if (!$result || $result->num_rows === 0) {
+        return [];
+    }
+
+    $products = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $productId = (int) $row['product_id'];
+
+        /* ------------------------------
+           STEP 2: FETCH FEATURES
+        ------------------------------ */
+        $features = [];
+        $featureQuery = "
+            SELECT 
+                feature,
+                is_interior,
+                is_exterior,
+                is_limited,
+                is_included
+            FROM " . PRODUCTFEATURES . "
+            WHERE product_id = ?
+            ORDER BY id ASC
+        ";
+
+        $stmt = $conn->prepare($featureQuery);
+        if ($stmt) {
+            $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $featureResult = $stmt->get_result();
+
+            while ($f = $featureResult->fetch_assoc()) {
+                $features[] = [
+                    "feature" => $f['feature'],
+                    "type" => getFeatureType($f)
+                ];
+            }
+
+            $stmt->close();
+        }
+
+        /* ------------------------------
+           STEP 3: FETCH PRICES (for this car only)
+        ------------------------------ */
+        $prices = [];
+        $priceQuery = "
+            SELECT 
+                pp.car_type_id, 
+                ct.car_name, 
+                pp.price
+            FROM product_prices pp
+            JOIN car_types ct ON pp.car_type_id = ct.car_id
+            WHERE pp.product_id = ? AND pp.car_type_id = ?
+        ";
+
+        $stmt = $conn->prepare($priceQuery);
+        if ($stmt) {
+            $stmt->bind_param("ii", $productId, $carId);
+            $stmt->execute();
+            $priceResult = $stmt->get_result();
+
+            while ($p = $priceResult->fetch_assoc()) {
+                $prices[] = [
+                    "car_id" => $p['car_type_id'],
+                    "car_name" => $p['car_name'],
+                    "price" => $p['price']
+                ];
+            }
+
+            $stmt->close();
+        }
+
+        /* ------------------------------
+           STEP 4: COMBINE EVERYTHING
+        ------------------------------ */
+        $row['features'] = $features;
+        $row['prices'] = $prices;
+        $products[] = $row;
+    }
+
+    return $products;
 }

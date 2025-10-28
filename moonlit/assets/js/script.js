@@ -36,12 +36,60 @@ function goToPlan(){
             window.location = "./select-plan.html";
 
 }
+
 document.querySelectorAll('.ob-tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.ob-tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   });
 });
+
+function storeUserInfor(redirectTo, paymentMethod) {
+  // Show loading overlay
+  const loadingOverlay = document.querySelector('.loading-overlay');
+  if (loadingOverlay) loadingOverlay.classList.add('show');
+
+  // Get booking data from sessionStorage
+  const bookingDataStr = sessionStorage.getItem('bookingData');
+  let bookingData = bookingDataStr ? JSON.parse(bookingDataStr) : {};
+  var username = document.getElementById('fullname').value;
+  var email = document.getElementById('email').value;
+  var phoneNumber = document.getElementById('phone_number').value;
+  var carMake = document.getElementById('car_make').value;
+  // Add car data
+  bookingData.username = username;
+  bookingData.email = email;
+  bookingData.phoneNumber = phoneNumber;
+  bookingData.carMake = carMake;
+  bookingData.paymentMethod = paymentMethod;
+
+  // Save to sessionStorage
+  sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+
+  // Send to PHP session
+  fetch('save-userinfo-to-session.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(bookingData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = redirectTo;
+    } else {
+   console.error('Error:', error);
+    if (loadingOverlay) loadingOverlay.classList.remove('show');
+    alert(data.message);    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    if (loadingOverlay) loadingOverlay.classList.remove('show');
+    alert('An error occurred. Please try again.');
+  });
+}
+
 
 function goToDate(){
             window.location = "./select-date.html";
@@ -52,7 +100,7 @@ function goToBooking(){
 
 }
 function goToPayNow(){
-            window.location = "./pay-now.html";
+  storeUserInfor("./pay-now.php", "pay_now");
 
 }
 function goToBookingPlace(){

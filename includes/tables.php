@@ -8,3 +8,4 @@ const PRODUCTS = 'products';
 const WORKINGHOURS = 'working_hours';
 const BANKS = 'bank_accounts';
 const CUSTOMERS = 'customers';
+const PRODUCTFEATURES = 'product_features';

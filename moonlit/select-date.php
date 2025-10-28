@@ -109,7 +109,7 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
         <div class="container">
           <div class="ob-schedule-container">
             <!-- Calendar Section -->
-            <div class="ob-calendar">
+            <div class="ob-calendar" id="calender-box">
               <div class="ob-calendar-header">
                 <button id="prevMonth"><</button>
                 <span id="monthYear"></span>
@@ -129,7 +129,7 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
 
             <!-- Time Selection Section -->
             <div class="ob-times" id="timeList">
-              <h4 id="selectedDateText" class="text-muted">Select a date first</h4>
+              <h4 id="selectedDateText"></h4>
               <div id="timesContainer" class="hidden">
                 <!-- Times will be loaded via AJAX -->
               </div>
@@ -157,7 +157,9 @@ const selectedDateText = document.getElementById("selectedDateText");
 const proceedBtn = document.getElementById("proceedBtn");
 const loadingOverlay = document.getElementById("loadingOverlay");
 const loadingText = document.getElementById("loadingText");
-
+const calendarSection = document.querySelector(".ob-calendar");
+const timesSection = document.querySelector(".ob-times");
+timesSection.display="none";
 let date = new Date();
 let currentMonth = date.getMonth();
 let currentYear = date.getFullYear();
@@ -216,22 +218,32 @@ function selectDate(day, month, year) {
   loadingOverlay.classList.add('show');
   loadingText.textContent = 'Loading available times...';
   
+  // Get productId from PHP (make sure it's available in your page)
+  const productId = '<?php echo  $planID ;?>';
+  
   // Fetch available times via AJAX
   fetch('get-available-times.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ date: dateStr, productId:  '<?php echo $planID;?>' })
+    body: JSON.stringify({ date: dateStr, productId: productId })
   })
   .then(response => response.json())
   .then(data => {
     loadingOverlay.classList.remove('show');
     
-    if (data.success && data.available_times.length > 0) {
+      document.getElementById('calender-box').display="none";
+
+    if (data.status === 'success' && data.available_times && data.available_times.length > 0) {
+      // Hide calendar and show times in full width
+      calendarSection.style.display = 'none';
+      timesSection.style.flex = '1';
+      timesSection.style.maxWidth = '100%';
+      
       displayTimes(data.available_times);
     } else {
-      timesContainer.innerHTML = '<p class="text-muted">No available times for this date</p>';
+      timesContainer.innerHTML = '<p class="text-white text-center">No available times for this date</p>';
       timesContainer.classList.remove("hidden");
     }
   })
@@ -321,7 +333,7 @@ proceedBtn.addEventListener('click', function() {
     if (data.success) {
       console.log('Date & time saved:', data);
       // Redirect to booking summary or checkout
-      window.location.href = 'booking-summary.php';
+      window.location.href = 'booking-details.php';
     } else {
       throw new Error(data.message || 'Failed to save date & time');
     }
