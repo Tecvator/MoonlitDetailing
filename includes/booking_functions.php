@@ -60,6 +60,7 @@ function getAllBookings($conn) {
             b.washing_status,
             b.callout_fee,
             b.payment_method,
+            b.payment_receipt,
             b.payment_status,
             b.created_at,
             c.name AS customer_name,
@@ -204,6 +205,108 @@ function numberToWords($num) {
     }
 
     return preg_replace('/\s+/', ' ', trim($result));
+}
+function getDashboardStats($conn) {
+    $today = date('Y-m-d');
+
+    // ✅ Total sales (paid bookings)
+    $salesQuery = "SELECT SUM(price) AS total_sales FROM bookings WHERE payment_status = 'paid'";
+    $salesResult = $conn->query($salesQuery);
+    $sales = ($salesResult && $salesResult->num_rows) ? $salesResult->fetch_assoc()['total_sales'] : 0;
+    $sales = $sales ?? 0;
+
+    // 🚫 Expenses table not available yet — leaving commented
+    /*
+    $expenseQuery = "SELECT SUM(amount) AS total_expenses FROM expenses";
+    $expenses = $conn->query($expenseQuery)->fetch_assoc()['total_expenses'] ?? 0;
+    */
+    $expenses = 0; // Temporary placeholder until you add an expenses table
+
+    // 🧾 Unpaid invoices
+    $unpaidQuery = "SELECT COUNT(*) AS unpaid_invoices FROM bookings WHERE payment_status = 'unpaid'";
+    $unpaidResult = $conn->query($unpaidQuery);
+    $unpaid = ($unpaidResult && $unpaidResult->num_rows) ? $unpaidResult->fetch_assoc()['unpaid_invoices'] : 0;
+    $unpaid = $unpaid ?? 0;
+
+    // ⚠️ Invoices due soon (within next 7 days)
+    $dueQuery = "SELECT COUNT(*) AS invoices_due FROM bookings 
+                 WHERE payment_status = 'unpaid' 
+                 AND washing_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)";
+    $dueResult = $conn->query($dueQuery);
+    $due = ($dueResult && $dueResult->num_rows) ? $dueResult->fetch_assoc()['invoices_due'] : 0;
+    $due = $due ?? 0;
+
+    // 📅 Next upcoming bookings (next 5)
+    $nextBookingsQuery = "
+        SELECT b.id, b.washing_date, b.washing_time, c.name AS customer_name, p.product_name
+        FROM bookings b
+        JOIN customers c ON b.customer_id = c.id
+        JOIN products p ON b.product_id = p.id
+        WHERE b.payment_status = 'paid' AND b.washing_status = 'pending'
+        ORDER BY b.washing_date, b.washing_time ASC
+        LIMIT 5";
+    $nextBookingsResult = $conn->query($nextBookingsQuery);
+    $nextBookings = $nextBookingsResult ? $nextBookingsResult->fetch_all(MYSQLI_ASSOC) : [];
+
+    // 🧼 Top 3 services (by frequency)
+    $topServicesQuery = "
+        SELECT p.product_name, COUNT(b.id) AS total_orders
+        FROM bookings b
+        JOIN products p ON b.product_id = p.id
+        GROUP BY p.product_name
+        ORDER BY total_orders DESC
+        LIMIT 3";
+    $topServicesResult = $conn->query($topServicesQuery);
+    $topServices = $topServicesResult ? $topServicesResult->fetch_all(MYSQLI_ASSOC) : [];
+
+    // 👑 Top 3 paying customers
+    $topCustomersQuery = "
+        SELECT c.name, SUM(b.price) AS total_spent
+        FROM bookings b
+        JOIN customers c ON b.customer_id = c.id
+        WHERE b.payment_status = 'paid'
+        GROUP BY c.id
+        ORDER BY total_spent DESC
+        LIMIT 3";
+    $topCustomersResult = $conn->query($topCustomersQuery);
+    $topCustomers = $topCustomersResult ? $topCustomersResult->fetch_all(MYSQLI_ASSOC) : [];
+
+    // 🧽 Maintenance tracking (for recurring plans)
+    // NOTE: products table does not have plan_type or maintenance_interval in your schema.
+    // We'll return product_name, max_hours and last_booking_date for each maintenance product
+    // so you can calculate follow-up timing in PHP or UI.
+   /* $maintenanceQuery = "
+        SELECT 
+            c.name AS customer_name,
+            b.washing_date,
+            p.id AS product_id,
+            p.product_name,
+            p.max_hours,
+            -- last booking date for this customer+product (most recent)
+            (SELECT MAX(b2.washing_date) 
+             FROM bookings b2 
+             WHERE b2.customer_id = b.customer_id AND b2.product_id = b.product_id) AS last_booking_date
+        FROM bookings b
+        JOIN customers c ON b.customer_id = c.id
+        JOIN products p ON b.product_id = p.id
+        WHERE p.is_maintenance = 1
+        GROUP BY c.id, p.id
+        ORDER BY last_booking_date DESC
+        LIMIT 100
+    ";*/
+  //  $maintenanceResult = $conn->query($maintenanceQuery);
+   // $maintenanceClients = $maintenanceResult ? $maintenanceResult->fetch_all(MYSQLI_ASSOC) : [];
+
+    return [
+        'total_sales' => number_format((float)$sales, 2),
+        'total_expenses' => number_format((float)$expenses, 2),
+        'unpaid_invoices' => (int)$unpaid,
+        'invoices_due' => (int)$due,
+        'next_bookings' => $nextBookings,
+        'top_services' => $topServices,
+        'top_customers' => $topCustomers,
+       // 'maintenance_clients' => $maintenanceClients
+    ];
 }
 
 

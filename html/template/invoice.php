@@ -165,7 +165,7 @@ include "../../includes/session.php";
                         <th>Invoice No</th>
                         <th>Customer</th>
                         <th>Car Type</th>
-                        <th>Base Amount</th>
+                        <th>Receipt URL</th>
                         <th>Callout Fee</th>
                         <th>Total Amount</th>
                         <th>Product</th>
@@ -174,102 +174,123 @@ include "../../includes/session.php";
                         <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    $bookings = getAllBookings($conn);
-                    if (!empty($bookings)):
-                        foreach ($bookings as $booking): 
-                            $baseAmount = floatval($booking['price']) - floatval($booking['callout_fee'] ?? 0);
-                            $calloutFee = floatval($booking['callout_fee'] ?? 0);
-                            $totalAmount = floatval($booking['price']);
-                            $washStatus = $booking['washing_status'] ?? 'pending';
-                    ?>
-                        <tr data-payment="<?php echo $booking['payment_status']; ?>" 
-                            data-wash="<?php echo $washStatus; ?>"
-                            data-amount="<?php echo $totalAmount; ?>"
-                            data-date="<?php echo strtotime($booking['created_at'] ?? date('Y-m-d')); ?>">
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox" />
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <a href="invoice-details.php?id=<?php echo $booking['id']; ?>">
-                                    INV<?php echo str_pad($booking['id'], 3, '0', STR_PAD_LEFT); ?>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0);"><?php echo htmlspecialchars($booking['customer_name']); ?></a>
-                            </td>
-                            <td><?php echo htmlspecialchars($booking['car_type']); ?></td>
-                            <td><?php echo $siteinfo['site_currency']." ".number_format($baseAmount, 2); ?></td>
-                            <td>
-                                <?php if ($calloutFee > 0): ?>
-                                    <span class="badge badge-soft-info badge-xs">
-                                        <?php echo $siteinfo['site_currency']." ".number_format($calloutFee, 2); ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                <?php endif; ?>
-                            </td>
-                            <td><strong><?php echo $siteinfo['site_currency']." ".number_format($totalAmount, 2); ?></strong></td>
-                            <td><?php echo htmlspecialchars($booking['product_name']); ?></td>
-                            <td>
-                                <?php if ($booking['payment_status'] === "paid"): ?>
-                                    <span class="badge badge-soft-success badge-xs shadow-none">
-                                        <i class="ti ti-point-filled me-1"></i>Paid
-                                    </span>
-                                <?php else: ?>
-                                    <span class="badge badge-soft-danger badge-xs shadow-none">
-                                        <i class="ti ti-point-filled me-1"></i>Unpaid
-                                    </span>
-                                    <a href="javascript:void(0);" 
-                                       class="ms-2 text-success update-payment-status" 
-                                       data-id="<?php echo $booking['id']; ?>"
-                                       title="Mark as Paid">
-                                        <i class="ti ti-circle-check fs-18"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($washStatus === "completed"): ?>
-                                    <span class="badge badge-soft-success badge-xs shadow-none">
-                                        <i class="ti ti-point-filled me-1"></i>Completed
-                                    </span>
-                                <?php else: ?>
-                                    <span class="badge badge-soft-warning badge-xs shadow-none">
-                                        <i class="ti ti-point-filled me-1"></i>Pending
-                                    </span>
-                                    <a href="javascript:void(0);" 
-                                       class="ms-2 text-primary update-wash-status" 
-                                       data-id="<?php echo $booking['id']; ?>"
-                                       title="Mark as Completed">
-                                        <i class="ti ti-checks fs-18"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <div class="edit-delete-action d-flex align-items-center justify-content-center">
-                                    <a class="me-2 p-2 d-flex align-items-center justify-content-between border rounded"
-                                       href="invoice-details.php?id=<?php echo $booking['id']; ?>">
-                                        <i data-feather="eye" class="feather-eye"></i>
-                                    </a>
-                                    <a class="p-2 d-flex align-items-center justify-content-between border rounded deleteTrigger"
-                                       href="javascript:void(0);"
-                                       data-id="<?php echo $booking['id']; ?>"
-                                       data-bs-toggle="modal"
-                                       data-bs-target="#delete-modal">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach;
-                    else: ?>
-                        <tr><td colspan="11" class="text-center">No bookings found</td></tr>
-                    <?php endif; ?>
-                </tbody>
+            <tbody>
+    <?php
+    $bookings = getAllBookings($conn);
+    if (!empty($bookings)):
+        foreach ($bookings as $booking): 
+            $baseAmount = floatval($booking['price']) - floatval($booking['callout_fee'] ?? 0);
+            $calloutFee = floatval($booking['callout_fee'] ?? 0);
+            $totalAmount = floatval($booking['price']);
+            $washStatus = $booking['washing_status'] ?? 'pending';
+            $receiptInfo = $booking['payment_receipt'] ?? 'No Receipt';
+            // REMOVED: echo $receiptInfo; - This was causing the issue
+    ?>
+        <tr data-payment="<?php echo htmlspecialchars($booking['payment_status']); ?>" 
+            data-wash="<?php echo htmlspecialchars($washStatus); ?>"
+            data-amount="<?php echo $totalAmount; ?>"
+            data-date="<?php echo strtotime($booking['created_at'] ?? date('Y-m-d')); ?>">
+            <td>
+                <label class="checkboxs">
+                    <input type="checkbox" />
+                    <span class="checkmarks"></span>
+                </label>
+            </td>
+            <td>
+                <a href="invoice-details.php?id=<?php echo $booking['id']; ?>">
+                    INV<?php echo str_pad($booking['id'], 3, '0', STR_PAD_LEFT); ?>
+                </a>
+            </td>
+            <td>
+                <a href="javascript:void(0);"><?php echo htmlspecialchars($booking['customer_name']); ?></a>
+            </td>
+            <td><?php echo htmlspecialchars($booking['car_type']); ?></td>
+            <td>
+                <?php
+                if ($booking['payment_method'] == 'pay_after') {
+                    if (!empty($booking['payment_receipt']) && $booking['payment_receipt'] !== 'No Receipt') {
+                        // Check if it's a full path or just filename
+                        $receiptPath = $booking['payment_receipt'];
+                        if (!preg_match('/^https?:\/\//', $receiptPath) && !preg_match('/^uploads\//', $receiptPath)) {
+                            $receiptPath = 'uploads/receipts/' . basename($receiptPath);
+                        }
+                        echo '<a href="' . htmlspecialchars($receiptPath) . '" target="_blank" class="badge badge-soft-primary badge-xs">
+                                <i class="ti ti-file-text me-1"></i>View Receipt
+                              </a>';
+                    } else {
+                        echo '<span class="badge badge-soft-secondary badge-xs">No receipt uploaded</span>';
+                    }
+                } else {
+                    echo '<span class="text-muted">-</span>';
+                }
+                ?>
+            </td>
+            <td>
+                <?php if ($calloutFee > 0): ?>
+                    <span class="badge badge-soft-info badge-xs">
+                        <?php echo $siteinfo['site_currency']." ".number_format($calloutFee, 2); ?>
+                    </span>
+                <?php else: ?>
+                    <span class="text-muted">-</span>
+                <?php endif; ?>
+            </td>
+            <td><strong><?php echo $siteinfo['site_currency']." ".number_format($totalAmount, 2); ?></strong></td>
+            <td><?php echo htmlspecialchars($booking['product_name']); ?></td>
+            <td>
+                <?php if ($booking['payment_status'] === "paid"): ?>
+                    <span class="badge badge-soft-success badge-xs shadow-none">
+                        <i class="ti ti-point-filled me-1"></i>Paid
+                    </span>
+                <?php else: ?>
+                    <span class="badge badge-soft-danger badge-xs shadow-none">
+                        <i class="ti ti-point-filled me-1"></i>Unpaid
+                    </span>
+                    <a href="javascript:void(0);" 
+                       class="ms-2 text-success update-payment-status" 
+                       data-id="<?php echo $booking['id']; ?>"
+                       title="Mark as Paid">
+                        <i class="ti ti-circle-check fs-18"></i>
+                    </a>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($washStatus === "completed"): ?>
+                    <span class="badge badge-soft-success badge-xs shadow-none">
+                        <i class="ti ti-point-filled me-1"></i>Completed
+                    </span>
+                <?php else: ?>
+                    <span class="badge badge-soft-warning badge-xs shadow-none">
+                        <i class="ti ti-point-filled me-1"></i>Pending
+                    </span>
+                    <a href="javascript:void(0);" 
+                       class="ms-2 text-primary update-wash-status" 
+                       data-id="<?php echo $booking['id']; ?>"
+                       title="Mark as Completed">
+                        <i class="ti ti-checks fs-18"></i>
+                    </a>
+                <?php endif; ?>
+            </td>
+            <td>
+                <div class="edit-delete-action d-flex align-items-center justify-content-center">
+                    <a class="me-2 p-2 d-flex align-items-center justify-content-between border rounded"
+                       href="invoice-details.php?id=<?php echo $booking['id']; ?>">
+                        <i data-feather="eye" class="feather-eye"></i>
+                    </a>
+                    <a class="p-2 d-flex align-items-center justify-content-between border rounded deleteTrigger"
+                       href="javascript:void(0);"
+                       data-id="<?php echo $booking['id']; ?>"
+                       data-bs-toggle="modal"
+                       data-bs-target="#delete-modal">
+                        <i data-feather="trash-2" class="feather-trash-2"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach;
+    else: ?>
+        <tr><td colspan="11" class="text-center">No bookings found</td></tr>
+    <?php endif; ?>
+</tbody>
             </table>
         </div>
     </div>
@@ -416,12 +437,7 @@ include "../../includes/session.php";
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const table = $('#invoiceTable').DataTable({
-        "order": [[1, "desc"]], // Sort by Invoice No (newest first)
-        "columnDefs": [
-            { "orderable": false, "targets": [0, 10] }
-        ]
-    });
+
 
     // ========== FILTERING ==========
     

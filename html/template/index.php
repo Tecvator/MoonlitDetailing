@@ -2,6 +2,7 @@
 include "../../includes/session.php";
 $booking_stats = getBookingStats($conn);
 $nextschedule = getNextScheduledBooking($conn);
+$dashboard = getDashboardStats($conn);
 
 ?>
 <!DOCTYPE html>
@@ -208,13 +209,13 @@ $nextschedule = getNextScheduledBooking($conn);
 					<!-- /Invoice -->
 
 					<!-- Expenses -->
-					<div class="col-xl-3 col-sm-6 col-12 d-flex">
+					<div class="col-xl-3 col-sm-6 col-12 d-flex d-none" >
 						<div class="card revenue-widget flex-fill">
 							<div class="card-body">
 								<div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
 									<div>
 										<h4 class="mb-1">
-											<?php echo ucfirst($siteinfo['site_currency'])."". $booking_stats['total_callout_fee'];?></h4>
+											<?php// echo ucfirst($siteinfo['site_currency'])."". $booking_stats['total_callout_fee'];?></h4>
 										<p>Total Callout Fee</p>
 									</div>
 									<span class="revenue-icon bg-orange-transparent text-orange">
@@ -249,11 +250,94 @@ $nextschedule = getNextScheduledBooking($conn);
 						</div>
 					</div>
 					<!-- /Returns -->
+					 <div class="row mt-4">
+
+  <!-- Total Sales & Expenses Bar Chart -->
+  <div class="col-xl-6 col-12 mb-4 d-none">
+    <div class="card">
+      <div class="card-header"><h5>Sales vs Expenses</h5></div>
+      <div class="card-body">
+        <canvas id="salesExpensesChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Bookings / Reminders -->
+  <div class="col-xl-12 col-12 mb-4">
+    <div class="card">
+      <div class="card-header"><h5>Upcoming Bookings</h5></div>
+      <div class="card-body">
+        <ul class="list-group">
+          <?php foreach ($dashboard['next_bookings'] as $b): ?>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <strong><?= htmlspecialchars($b['customer_name']) ?></strong><br>
+                <?= htmlspecialchars($b['product_name']) ?> - <?= htmlspecialchars($b['washing_date']) ?> <?= htmlspecialchars($b['washing_time']) ?>
+              </span>
+              <a href="calendar-view.php?date=<?= urlencode($b['washing_date']) ?>" class="btn btn-sm btn-outline-primary">View</a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <!-- Top Services -->
+  <div class="col-xl-6 mb-4">
+    <div class="card">
+      <div class="card-header"><h5>Top Performing Services</h5></div>
+      <div class="card-body">
+        <ol>
+          <?php foreach ($dashboard['top_services'] as $service): ?>
+            <li><?= htmlspecialchars($service['product_name']) ?> — <?= $service['total_orders'] ?> Orders</li>
+          <?php endforeach; ?>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Paying Customers -->
+  <div class="col-xl-6 mb-4">
+    <div class="card">
+      <div class="card-header"><h5>Top Paying Customers</h5></div>
+      <div class="card-body">
+        <ol>
+          <?php foreach ($dashboard['top_customers'] as $customer): ?>
+            <li><?= htmlspecialchars($customer['name']) ?> — ₦<?= number_format($customer['total_spent'], 2) ?></li>
+          <?php endforeach; ?>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 				</div>
 
 			
 				
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('salesExpensesChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Total Sales', 'Total Expenses'],
+    datasets: [{
+      label: '₦',
+      data: [<?= $dashboard['total_sales'] ?>, <?= $dashboard['total_expenses'] ?>],
+      backgroundColor: ['#198754', '#dc3545']
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } }
+  }
+});
+</script>
 
 		
 				

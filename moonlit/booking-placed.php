@@ -32,7 +32,7 @@ if ($getBooking['status'] === true) {
 
     <div class="ob-content ">
         <h1 class="ob-title">
-  Thanks For Booking With Moonlit 
+  Thanks For Booking With <?php echo ucfirst($siteInfo['name']);?> 
   <span class="ob-title-line"></span>
 </h1>
 

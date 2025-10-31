@@ -159,7 +159,7 @@ const loadingOverlay = document.getElementById("loadingOverlay");
 const loadingText = document.getElementById("loadingText");
 const calendarSection = document.querySelector(".ob-calendar");
 const timesSection = document.querySelector(".ob-times");
-timesSection.display="none";
+timesSection.display = "none";
 let date = new Date();
 let currentMonth = date.getMonth();
 let currentYear = date.getFullYear();
@@ -172,8 +172,10 @@ function renderCalendar(month, year) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-                      "July", "August", "September", "October", "November", "December"];
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
   
   monthYear.textContent = monthNames[month] + " " + year;
   calendarDays.innerHTML = "";
@@ -203,25 +205,21 @@ function renderCalendar(month, year) {
 }
 
 function selectDate(day, month, year) {
-  // Remove active from all days
   document.querySelectorAll(".ob-days div").forEach(d => d.classList.remove("active"));
   event.target.classList.add("active");
   
   selectedDate = new Date(year, month, day);
-  const dateStr = selectedDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  const dateStr = selectedDate.toISOString().split('T')[0];
   
   selectedDateText.textContent = selectedDate.toDateString();
   selectedTime = null;
   proceedBtn.style.display = 'none';
   
-  // Show loading
   loadingOverlay.classList.add('show');
   loadingText.textContent = 'Loading available times...';
   
-  // Get productId from PHP (make sure it's available in your page)
-  const productId = '<?php echo  $planID ;?>';
+  const productId = '<?php echo $planID; ?>';
   
-  // Fetch available times via AJAX
   fetch('get-available-times.php', {
     method: 'POST',
     headers: {
@@ -233,14 +231,12 @@ function selectDate(day, month, year) {
   .then(data => {
     loadingOverlay.classList.remove('show');
     
-      document.getElementById('calender-box').display="none";
+    document.getElementById('calender-box').display = "none";
 
     if (data.status === 'success' && data.available_times && data.available_times.length > 0) {
-      // Hide calendar and show times in full width
       calendarSection.style.display = 'none';
       timesSection.style.flex = '1';
       timesSection.style.maxWidth = '100%';
-      
       displayTimes(data.available_times);
     } else {
       timesContainer.innerHTML = '<p class="text-white text-center">No available times for this date</p>';
@@ -269,12 +265,40 @@ function displayTimes(times) {
 }
 
 function selectTime(time, button) {
-  // Remove active from all time buttons
   document.querySelectorAll(".ob-time-btn").forEach(b => b.classList.remove("active"));
   button.classList.add("active");
   
   selectedTime = time;
   proceedBtn.style.display = 'block';
+}
+
+// === 🗓️ Function to create calendar event file ===
+function createCalendarEvent(title, description, startDateTime, endDateTime) {
+  const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//YourWebsite//EN
+BEGIN:VEVENT
+SUMMARY:${title}
+DESCRIPTION:${description}
+DTSTART:${startDateTime}
+DTEND:${endDateTime}
+BEGIN:VALARM
+TRIGGER:-PT10M
+DESCRIPTION:Reminder
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+`.trim();
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'booking-reminder.ics';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // Month navigation
@@ -303,36 +327,41 @@ proceedBtn.addEventListener('click', function() {
     return;
   }
   
-  // Show loading
   loadingOverlay.classList.add('show');
   loadingText.textContent = 'Saving your booking...';
   proceedBtn.disabled = true;
   
-  // Get booking data
   const bookingDataStr = sessionStorage.getItem('bookingData');
   let bookingData = bookingDataStr ? JSON.parse(bookingDataStr) : {};
   
-  // Add date and time
   bookingData.bookingDate = selectedDate.toISOString().split('T')[0];
   bookingData.bookingTime = selectedTime;
   bookingData.bookingDateTime = selectedDate.toDateString() + ' at ' + selectedTime;
   
-  // Save to sessionStorage
   sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
   
-  // Save to PHP session
   fetch('save-datetime-to-session.php', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(bookingData)
   })
   .then(response => response.json())
   .then(data => {
     if (data.success) {
       console.log('Date & time saved:', data);
-      // Redirect to booking summary or checkout
+      
+      // === 🕓 Create calendar reminder event ===
+      const title = "Booking Reminder";
+      const description = "Your booking on " + bookingData.bookingDateTime;
+      const start = new Date(selectedDate);
+      const [hours, minutes] = selectedTime.split(':');
+      start.setHours(hours, minutes, 0);
+      const end = new Date(start.getTime() + 60 * 60 * 1000);
+
+      const toICSFormat = date => date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      createCalendarEvent(title, description, toICSFormat(start), toICSFormat(end));
+
+      // Redirect after saving
       window.location.href = 'booking-details.php';
     } else {
       throw new Error(data.message || 'Failed to save date & time');
@@ -349,6 +378,7 @@ proceedBtn.addEventListener('click', function() {
 // Initialize calendar
 renderCalendar(currentMonth, currentYear);
 </script>
+
 
 </body>
 </html>
