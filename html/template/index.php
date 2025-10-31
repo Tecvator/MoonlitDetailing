@@ -306,7 +306,7 @@ $dashboard = getDashboardStats($conn);
       <div class="card-body">
         <ol>
           <?php foreach ($dashboard['top_customers'] as $customer): ?>
-            <li><?= htmlspecialchars($customer['name']) ?> — ₦<?= number_format($customer['total_spent'], 2) ?></li>
+            <li><?= htmlspecialchars($customer['name']) ?> — <?= $siteinfo['site_currency']." ". number_format($customer['total_spent'], 2) ?></li>
           <?php endforeach; ?>
         </ol>
       </div>
