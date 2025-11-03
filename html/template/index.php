@@ -163,7 +163,26 @@ $dashboard = getDashboardStats($conn);
 
 				
 				<div class="row">
-
+		<!-- Returns -->
+					<div class="col-xl-3 col-sm-6 col-12 d-flex">
+						<div class="card revenue-widget flex-fill">
+							<div class="card-body">
+								<div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+									<div>
+										<h4 class="mb-1"><?php echo ucfirst($siteinfo['site_currency'])."". $booking_stats['total_price']+$booking_stats['total_callout_fee'];?></h4>
+										<p>Total Sales </p>
+									</div>
+									<span class="revenue-icon bg-indigo-transparent text-indigo">
+										<i class="ti ti-cash fs-16"></i>
+									</span>
+								</div>
+								<div class="d-flex align-items-center justify-content-between">
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Returns -->
 					<!-- Profit -->
 					<div class="col-xl-3 col-sm-6 col-12 d-flex">
 						<div class="card revenue-widget flex-fill">
@@ -193,7 +212,7 @@ $dashboard = getDashboardStats($conn);
 								<div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
 									<div>
 										<h4 class="mb-1"><?php echo $booking_stats['total_customers'];?></h4>
-										<p>Total Cstomers</p>
+										<p>Total Customers</p>
 									</div>
 									<span class="revenue-icon bg-teal-transparent text-teal">
 										<i class="ti ti-users fs-16"></i>
@@ -236,8 +255,8 @@ $dashboard = getDashboardStats($conn);
 							<div class="card-body">
 								<div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
 									<div>
-										<h4 class="mb-1"><?php echo ucfirst($siteinfo['site_currency'])."". $booking_stats['total_price'];?></h4>
-										<p>Total Payment Returns</p>
+										<h4 class="mb-1"><?php echo ucfirst($siteinfo['site_currency'])."". $booking_stats['total_callout_fee'];?></h4>
+										<p>Total Callout</p>
 									</div>
 									<span class="revenue-icon bg-indigo-transparent text-indigo">
 										<i class="ti ti-hash fs-16"></i>
@@ -250,6 +269,7 @@ $dashboard = getDashboardStats($conn);
 						</div>
 					</div>
 					<!-- /Returns -->
+			
 					 <div class="row mt-4">
 
   <!-- Total Sales & Expenses Bar Chart -->

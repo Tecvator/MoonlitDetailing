@@ -1,6 +1,6 @@
 <?php
-   //$conn = mysqli_connect("localhost", "root", "", "moonlit");
-       $conn = mysqli_connect("localhost", "trustti1_moonlit", "2025@moon", "trustti1_moonlit");
+  // $conn = mysqli_connect("localhost", "root", "", "moonlit");
+      $conn = mysqli_connect("localhost", "trustti1_moonlit", "2025@moon", "trustti1_moonlit");
     require_once (__DIR__."/tables.php");
     require_once (__DIR__."/admin_functions.php");
     require_once (__DIR__."/product_functions.php");
