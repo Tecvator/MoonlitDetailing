@@ -1,0 +1,69 @@
+version: '3.8'
+
+# ================================
+# PRODUCTION OVERRIDES
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ================================
+
+services:
+  # ================================
+  # DATABASE (MySQL) - Production
+  # ================================
+  db:
+    restart: always
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=200
+      - --innodb_buffer_pool_size=512M
+    volumes:
+      # In production, you may want to backup the init scripts after first run
+      - db_data:/var/lib/mysql
+      # Comment out init scripts after first deployment to prevent re-initialization
+      # - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    # Don't expose database port in production (remove port mapping for security)
+    ports: []
+
+  # ================================
+  # PHP APPLICATION - Production
+  # ================================
+  web:
+    restart: always
+    environment:
+      # Override with production values from .env
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: ${PROD_APP_URL:-https://moonlit.trusttino.com}
+      API_BASE_URL: ${PROD_API_BASE_URL:-https://moonlit.trusttino.com/dashboard/api.php}
+
+      # Production database (can be external)
+      DB_HOST: ${PROD_DB_HOST:-db}
+      DB_NAME: ${PROD_DB_NAME:-moonlit}
+      DB_USER: ${PROD_DB_USER}
+      DB_PASSWORD: ${PROD_DB_PASSWORD}
+
+    volumes:
+      # In production, use read-only mounts for application code
+      - ./public:/var/www/html:ro
+      - ./src:/var/www/src:ro
+
+      # Only uploads directory is writable
+      - uploads_data:/var/www/html/uploads
+
+    # Production logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# ================================
+# PRODUCTION VOLUMES
+# ================================
+volumes:
+  db_data:
+    driver: local
+  uploads_data:
+    driver: local
+

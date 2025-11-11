@@ -1,0 +1,74 @@
+# ================================
+# ENVIRONMENT & SECRETS
+# ================================
+.env
+.env.local
+.env.*.local
+
+# ================================
+# DOCKER
+# ================================
+docker-compose.override.yml
+
+# ================================
+# DATABASE
+# ================================
+*.sql.backup
+*.sql.gz
+/docker/mysql/data/
+
+# ================================
+# UPLOADS & USER CONTENT
+# ================================
+/public/uploads/*
+!/public/uploads/.gitkeep
+/public/uploads/receipts/*
+!/public/uploads/receipts/.gitkeep
+
+# ================================
+# LOGS
+# ================================
+*.log
+/logs/
+/var/log/
+
+# ================================
+# PHP
+# ================================
+/vendor/
+composer.lock
+composer.phar
+
+# ================================
+# IDE & EDITORS
+# ================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ================================
+# SYSTEM FILES
+# ================================
+.DS_Store
+.AppleDouble
+.LSOverride
+desktop.ini
+$RECYCLE.BIN/
+
+# ================================
+# TEMPORARY FILES
+# ================================
+/tmp/
+/temp/
+*.tmp
+*.cache
+
+# ================================
+# PRODUCTION ARTIFACTS
+# ================================
+/build/
+/dist/
