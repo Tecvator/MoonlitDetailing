@@ -1,5 +1,5 @@
 <?php
-include "./../../../includes/session.php";
+require_once __DIR__ . "/../../../src/config/session.php";
 header('Content-Type: application/json');
 
 $carTypeId = intval($_POST['car_type_id'] ?? 0);

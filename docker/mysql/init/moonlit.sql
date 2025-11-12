@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
   `password` longtext NOT NULL,
   `is_super_admin` enum('yes','no') NOT NULL,
   `admin_unique_id` varchar(255) NOT NULL,
+  `admin_signature` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `admin_unique_id` (`admin_unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -43,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `admins` (
 -- Dumping data for table `admins`
 --
 
-INSERT INTO `admins` (`id`, `email`, `username`, `password`, `is_super_admin`, `admin_unique_id`) VALUES
-(1, 'lordphp319@gmail.com', 'John', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'yes', 'super_123'),
-(2, 'tino@gmail.com', 'Valentine', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'no', 'admin_1234');
+INSERT INTO `admins` (`id`, `email`, `username`, `password`, `is_super_admin`, `admin_unique_id`, `admin_signature`) VALUES
+(1, 'lordphp319@gmail.com', 'John', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'yes', 'super_123', NULL),
+(2, 'tino@gmail.com', 'Valentine', '$2y$10$Z634vRUmjiyr0rWstXvdPe5We6R8Q4Cwv9HCpyXSJ.arvgo3qohoa', 'no', 'admin_1234', NULL);
 
 -- --------------------------------------------------------
 
@@ -76,13 +77,16 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `car_type_id` int DEFAULT NULL,
   `product_id` int DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
+  `callout_fee` decimal(10,2) DEFAULT 0.00,
   `location_type` varchar(50) DEFAULT NULL,
   `customer_id` int DEFAULT NULL,
   `washing_date` date DEFAULT NULL,
   `washing_time` varchar(255) DEFAULT NULL,
+  `car_info` text DEFAULT NULL,
   `payment_receipt` varchar(255) DEFAULT NULL,
   `payment_method` varchar(50) DEFAULT NULL,
   `payment_status` varchar(50) DEFAULT NULL,
+  `washing_status` varchar(50) DEFAULT 'pending',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -92,10 +96,10 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `booking_id`, `car_type_id`, `product_id`, `price`, `location_type`, `customer_id`, `washing_date`, `washing_time`, `payment_receipt`, `payment_method`, `payment_status`, `created_at`, `updated_at`) VALUES
-(7, 'INV-483388-517956', 7, 1, 200.00, 'moonlit', 1, '2025-10-08', NULL, NULL, 'pay_now', 'paid', '2025-10-06 21:13:12', NULL),
-(8, 'INV-848733-208737', 8, 1, 100.00, 'moonlit', 1, '2025-10-07', NULL, NULL, 'pay_now', 'paid', '2025-10-07 19:12:51', NULL),
-(9, 'INV-154554-42932', 7, 2, 380.00, 'moonlit', 1, '2025-10-07', NULL, NULL, 'pay_now', 'paid', '2025-10-07 19:28:41', NULL);
+INSERT INTO `bookings` (`id`, `booking_id`, `car_type_id`, `product_id`, `price`, `callout_fee`, `location_type`, `customer_id`, `washing_date`, `washing_time`, `car_info`, `payment_receipt`, `payment_method`, `payment_status`, `washing_status`, `created_at`, `updated_at`) VALUES
+(7, 'INV-483388-517956', 7, 1, 200.00, 0.00, 'moonlit', 1, '2025-10-08', NULL, NULL, NULL, 'pay_now', 'paid', 'pending', '2025-10-06 21:13:12', NULL),
+(8, 'INV-848733-208737', 8, 1, 100.00, 0.00, 'moonlit', 1, '2025-10-07', NULL, NULL, NULL, 'pay_now', 'paid', 'pending', '2025-10-07 19:12:51', NULL),
+(9, 'INV-154554-42932', 7, 2, 380.00, 0.00, 'moonlit', 1, '2025-10-07', NULL, NULL, NULL, 'pay_now', 'paid', 'pending', '2025-10-07 19:28:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -234,6 +238,9 @@ CREATE TABLE IF NOT EXISTS `product_features` (
   `id` int NOT NULL AUTO_INCREMENT,
   `feature` varchar(255) NOT NULL,
   `is_interior` enum('yes','no') NOT NULL,
+  `is_exterior` enum('yes','no') DEFAULT 'no',
+  `is_included` enum('yes','no') DEFAULT 'yes',
+  `is_limited` enum('yes','no') DEFAULT 'no',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `product_id` varchar(255) NOT NULL,
@@ -295,6 +302,8 @@ CREATE TABLE IF NOT EXISTS `site_info` (
   `site_lat` varchar(255) NOT NULL,
   `site_lon` varchar(255) NOT NULL,
   `site_state` varchar(255) NOT NULL,
+  `site_terms` text DEFAULT NULL,
+  `site_note` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -304,8 +313,8 @@ CREATE TABLE IF NOT EXISTS `site_info` (
 -- Dumping data for table `site_info`
 --
 
-INSERT INTO `site_info` (`id`, `site_name`, `site_logo`, `site_address`, `site_email`, `site_phone`, `site_city`, `site_currency`, `site_mileage_price`, `site_map_key`, `site_lat`, `site_lon`, `site_state`, `created_at`, `updated_at`) VALUES
-(1, 'Moon Lit', 'http://localserver/moonlit_dashboard/html/template/process/uploads/1759861176_WhatsApp_Image_2025-09-25_at_1.02.04_PM.jpeg', 'kuru', 'lordphp319@gmail.com', '09024388386', 'Karu', NULL, NULL, 'AIzaSyDxpKBuxXpQRXU3XL97I4qqf2dbE_5M7Z0', '74673648934', '67930303', 'jokwoyi', '2025-09-28 07:38:30', '2025-09-28 07:38:30');
+INSERT INTO `site_info` (`id`, `site_name`, `site_logo`, `site_address`, `site_email`, `site_phone`, `site_city`, `site_currency`, `site_mileage_price`, `site_map_key`, `site_lat`, `site_lon`, `site_state`, `site_terms`, `site_note`, `created_at`, `updated_at`) VALUES
+(1, 'Moon Lit', 'assets/img/logo.svg', 'kuru', 'lordphp319@gmail.com', '09024388386', 'Karu', 'R', '4.76', 'AIzaSyDxpKBuxXpQRXU3XL97I4qqf2dbE_5M7Z0', '74673648934', '67930303', 'jokwoyi', 'All services are subject to availability and scheduling. Payment is required before service delivery.', 'Please ensure the vehicle is accessible at the scheduled time.', '2025-09-28 07:38:30', '2025-09-28 07:38:30');
 
 -- --------------------------------------------------------
 

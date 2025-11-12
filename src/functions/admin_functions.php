@@ -21,7 +21,7 @@ function getSiteBank($conn) {
 }
 
 function updateSiteInfo($conn, $data) {
-    $stmt = $conn->prepare("UPDATE " . SITEINFO . " 
+    $stmt = $conn->prepare("UPDATE " . SITEINFO . "
         SET site_name=?, site_email=?, site_phone=?, site_logo=?, site_address=?, site_state=?, site_city=?, site_currency=?, site_mileage_price=?, site_lon=?, site_lat=?
       , site_terms=?, site_note=?  WHERE id=1");
     $stmt->bind_param(
@@ -68,8 +68,6 @@ function loginAdmin($conn, $email, $password) {
 }
 
 function getAdminInfo($conn) {
-    session_start();
-
     if (isset($_SESSION['admin_id'])) {
         $adminId = $_SESSION['admin_id'];
 
@@ -89,7 +87,7 @@ function getAdminInfo($conn) {
 
 
 function getWorkingHours($conn) {
-    $sql = "SELECT c.*, a.username 
+    $sql = "SELECT c.*, a.username
             FROM ".WORKINGHOURS." c
             LEFT JOIN " . ADMINS . "  a ON c.added_by = a.id
             ORDER BY c.created_at DESC";
@@ -105,8 +103,8 @@ function getWorkingHours($conn) {
 }
 function updateWorkingHours($conn, $data) {
     $stmt = $conn->prepare("
-        UPDATE " . WORKINGHOURS . " 
-        SET open_time = ?, close_time = ? 
+        UPDATE " . WORKINGHOURS . "
+        SET open_time = ?, close_time = ?
         WHERE id = ?
     ");
     $stmt->bind_param("ssi", $data['open_time'], $data['close_time'], $data['id']);
@@ -116,7 +114,7 @@ function updateWorkingHours($conn, $data) {
 
 
 function updateBankInfo($conn, $data) {
-    $stmt = $conn->prepare("UPDATE " . BANKS . " 
+    $stmt = $conn->prepare("UPDATE " . BANKS . "
         SET bank_name=?, account_number=?, account_name=?
         WHERE id=1");
     $stmt->bind_param(
@@ -124,13 +122,13 @@ function updateBankInfo($conn, $data) {
         $data['bank'],
         $data['account'],
         $data['accountName'],
-    
+
     );
     return $stmt->execute();
 }
 function updateAdminSignature($conn, $data) {
     $stmt = $conn->prepare("UPDATE " . ADMINS . " SET signature_url = ? WHERE id = ?");
-    
+
     if (!$stmt) {
         error_log("Prepare failed: " . $conn->error);
         return false;
@@ -144,7 +142,7 @@ function updateAdminSignature($conn, $data) {
 
 function updateAdminPass($conn, $data) {
     $stmt = $conn->prepare("UPDATE " . ADMINS . " SET password = ? WHERE id = ?");
-    
+
     if (!$stmt) {
         error_log("Prepare failed: " . $conn->error);
         return false;

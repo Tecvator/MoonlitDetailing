@@ -1,5 +1,5 @@
 <?php
-include "./../../../includes/session.php";
+require_once __DIR__ . "/../../../src/config/session.php";
 $action = $_POST['action'] ?? '';
 
 switch ($action) {

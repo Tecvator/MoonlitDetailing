@@ -1,13 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/../src/config/init.php';
 
 // Check if user came from plan selection page
 if (!isset($_SESSION['booking_data'])) {
     header('Location: index.php');
     exit();
 }
-
-require_once __DIR__ . '/../src/config/init.php';
 
 // Get booking data from session
 $bookingData = $_SESSION['booking_data'];
@@ -47,7 +45,7 @@ if (!empty($priceResponse['status']) && ($priceResponse['status'] === true || $p
 
 
     <div class="row">
-      
+
       <!-- Left Section (Car Image) -->
       <div class="col-md-6 ob-book-left d-none d-md-block"></div>
 
@@ -55,7 +53,7 @@ if (!empty($priceResponse['status']) && ($priceResponse['status'] === true || $p
       <div class="col-md-6 ob-right d-flex align-items-center justify-content-center">
         <div class="ob-form-box text-center">
           <div class="row mb-4 align-items-center">
-            <div class="col-2 back-div"  onclick="window.history.back()"> 
+            <div class="col-2 back-div"  onclick="window.history.back()">
               <img src="./assets/images/back.png" class="ml-2" alt="back icon"/>
             </div>
             <div class="col-10 text-start">
@@ -72,7 +70,7 @@ if (!empty($priceResponse['status']) && ($priceResponse['status'] === true || $p
             <p><strong><?php echo $category;?></strong> <br><span class="text-white-50"><?php echo $planName;?></span>
              <span class="float-end"><?php echo $priceData['base_price'];?></span></p>
             <p><strong>Call Out Fee</strong> <br>
-            <span class="text-white-50"><?php echo $address;?></span> 
+            <span class="text-white-50"><?php echo $address;?></span>
             <span class="float-end"><?php echo $priceData['callout_fee'];?></span></p>
             <hr class="border-secondary">
             <p class="fw-bold fs-5">Total <span class="float-end text-white"><?php echo $priceData['total_price'];?></span></p>

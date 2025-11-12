@@ -1,5 +1,5 @@
-<?php require_once __DIR__ . '/../src/config/init.php';
-session_start();
+<?php
+require_once __DIR__ . '/../src/config/init.php';
 
 // Check if user came from car selection page
 if (!isset($_SESSION['booking_data'])) {
@@ -8,7 +8,7 @@ if (!isset($_SESSION['booking_data'])) {
 }
 $bookingData = $_SESSION['booking_data'];
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +24,7 @@ $bookingData = $_SESSION['booking_data'];
 
   <div class="container-fluid ob-main-container">
     <div class="row">
-      
+
       <!-- Left Section (Car Image) -->
       <div class="col-md-6 ob-paynow-left d-none d-md-block"></div>
 
@@ -52,7 +52,7 @@ $bookingData = $_SESSION['booking_data'];
                     </div>
 
                     <div class="full-width">
-                            <span class="pay-inst-text">After you've paid, simply upload your receipt below 
+                            <span class="pay-inst-text">After you've paid, simply upload your receipt below
                                 <br/>
                                 so we can confirm instantly.</span>
                     </div>
@@ -66,7 +66,7 @@ $bookingData = $_SESSION['booking_data'];
                             <div class="upload-btn-div">
                                 <button class="btn btn-dark upload-btn"> <span class="ob-select-icon-two-sm">✓</span> Upload </button>
                             </div>
-                            
+
                         </div>
                     </div>
             </div>
@@ -101,7 +101,7 @@ $bookingData = $_SESSION['booking_data'];
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/js/script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+
   <script>
     let uploadedFile = null;
 
@@ -157,7 +157,7 @@ document.querySelector('.upload-btn').addEventListener('click', function () {
 
   document.body.appendChild(fileInput);
   fileInput.click();
-  
+
   // Clean up after file selection or cancel
   setTimeout(() => {
     document.body.removeChild(fileInput);

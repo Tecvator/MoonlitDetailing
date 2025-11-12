@@ -1,13 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/../src/config/init.php';
 
 // Check if user came from plan selection page
 if (!isset($_SESSION['booking_data'])) {
     header('Location: index.php');
     exit();
 }
-
-require_once __DIR__ . '/../src/config/init.php';
 
 // Get booking data from session
 $bookingData = $_SESSION['booking_data'];
@@ -28,7 +26,7 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="assets/css/select_date.css" rel="stylesheet">
-  
+
   <style>
     /* Loading overlay */
     .loading-overlay {
@@ -147,13 +145,13 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
 
 <div class="container-fluid ob-main-container">
   <div class="row">
-    
+
     <!-- Left Section (Car Image) -->
     <div class="col-md-6 ob-date-left d-none d-md-block"></div>
 
     <!-- Right Section (Form) -->
     <div class="col-md-6 ob-right d-flex align-items-center justify-content-center" style="padding-top: 30px;">
-      
+
       <div class="ob-form-box text-center">
         <div class="row mb-3 align-items-center">
           <div class="col-2 back-div">
@@ -163,7 +161,7 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
           </div>
           <div class="col-10">
             <button class="btn btn-primary form-control btn-for-info">
-              You selected <?php echo htmlspecialchars($category); ?> - <?php echo htmlspecialchars($planName); ?> - <?php echo htmlspecialchars($carName); ?> 
+              You selected <?php echo e($category); ?> - <?php echo e($planName); ?> - <?php echo e($carName); ?>
               <b>R <?php echo number_format($price, 2); ?></b>
             </button>
           </div>
@@ -171,10 +169,10 @@ $planID = isset($bookingData['planId']) ? $bookingData['planId'] : '0';
 
         <h1 class="ob-title">Lock In Your Detailing Slot<span class="ob-title-line"></span></h1>
         <span class="text-hash">
-          Choose A Time That Suits You - 
+          Choose A Time That Suits You -
           <span class="text-white">Our Team Will Be There, Ready To Make Your Car Shine Like New.</span>
         </span>
-    
+
         <div class="mt-10"></div>
 
         <div class="container">
@@ -261,7 +259,7 @@ function showCalendar() {
   timesContainer.classList.add("hidden");
   selectedDateText.textContent = '';
   proceedBtn.style.display = 'none';
-  
+
   // Remove active state from calendar days
   document.querySelectorAll(".ob-days div").forEach(d => d.classList.remove("active"));
 }
@@ -278,7 +276,7 @@ function renderCalendar(month, year) {
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  
+
   monthYear.textContent = monthNames[month] + " " + year;
   calendarDays.innerHTML = "";
 
@@ -292,16 +290,16 @@ function renderCalendar(month, year) {
     const day = document.createElement("div");
     const dayDate = new Date(year, month, d);
     dayDate.setHours(0, 0, 0, 0);
-    
+
     day.textContent = d;
-    
+
     // Disable past dates
     if (dayDate < today) {
       day.classList.add("disabled");
     } else {
       day.addEventListener("click", () => selectDate(d, month, year));
     }
-    
+
     calendarDays.appendChild(day);
   }
 }
@@ -309,19 +307,19 @@ function renderCalendar(month, year) {
 function selectDate(day, month, year) {
   document.querySelectorAll(".ob-days div").forEach(d => d.classList.remove("active"));
   event.target.classList.add("active");
-  
+
   selectedDate = new Date(year, month, day);
   const dateStr = selectedDate.toISOString().split('T')[0];
-  
+
   selectedDateText.textContent = selectedDate.toDateString();
   selectedTime = null;
   proceedBtn.style.display = 'none';
-  
+
   loadingOverlay.classList.add('show');
   loadingText.textContent = 'Loading available times...';
-  
+
   const productId = '<?php echo $planID; ?>';
-  
+
   fetch('get-available-times.php', {
     method: 'POST',
     headers: {
@@ -342,7 +340,7 @@ function selectDate(day, month, year) {
     } else {
       // Show toast notification
       showToast();
-      
+
       // Reset selection
       document.querySelectorAll(".ob-days div").forEach(d => d.classList.remove("active"));
       selectedDate = null;
@@ -353,7 +351,7 @@ function selectDate(day, month, year) {
     console.error('Error:', error);
     loadingOverlay.classList.remove('show');
     showToast();
-    
+
     // Reset selection
     document.querySelectorAll(".ob-days div").forEach(d => d.classList.remove("active"));
     selectedDate = null;
@@ -363,7 +361,7 @@ function selectDate(day, month, year) {
 
 function displayTimes(times) {
   timesContainer.innerHTML = '';
-  
+
   times.forEach(time => {
     const btn = document.createElement('button');
     btn.className = 'ob-time-btn';
@@ -371,14 +369,14 @@ function displayTimes(times) {
     btn.addEventListener('click', () => selectTime(time, btn));
     timesContainer.appendChild(btn);
   });
-  
+
   timesContainer.classList.remove("hidden");
 }
 
 function selectTime(time, button) {
   document.querySelectorAll(".ob-time-btn").forEach(b => b.classList.remove("active"));
   button.classList.add("active");
-  
+
   selectedTime = time;
   proceedBtn.style.display = 'block';
 }
@@ -437,20 +435,20 @@ proceedBtn.addEventListener('click', function() {
     alert('Please select both date and time');
     return;
   }
-  
+
   loadingOverlay.classList.add('show');
   loadingText.textContent = 'Saving your booking...';
   proceedBtn.disabled = true;
-  
+
   const bookingDataStr = sessionStorage.getItem('bookingData');
   let bookingData = bookingDataStr ? JSON.parse(bookingDataStr) : {};
-  
+
   bookingData.bookingDate = selectedDate.toISOString().split('T')[0];
   bookingData.bookingTime = selectedTime;
   bookingData.bookingDateTime = selectedDate.toDateString() + ' at ' + selectedTime;
-  
+
   sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
-  
+
   fetch('save-datetime-to-session.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -460,7 +458,7 @@ proceedBtn.addEventListener('click', function() {
   .then(data => {
     if (data.success) {
       console.log('Date & time saved:', data);
-      
+
       // === 🕓 Create calendar reminder event ===
       const title = "Booking Reminder";
       const description = "Your booking on " + bookingData.bookingDateTime;

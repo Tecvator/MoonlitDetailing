@@ -1,9 +1,9 @@
-<?php 
+<?php
 require_once __DIR__ . "/../../src/config/session.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
 
 		<!-- Meta Tags -->
@@ -15,31 +15,31 @@ require_once __DIR__ . "/../../src/config/session.php";
 		<meta name="author" content="Dreams Technologies">
 		<meta name="robots" content="index, follow">
 		<title><?php echo $siteinfo['site_name'];?>  -  Admin Dashboard Template</title>
-		
+
 
 		<!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
 
 		<!-- Apple Touch Icon -->
 		<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
-		
+
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-		
+
 		<!-- animation CSS -->
         <link rel="stylesheet" href="assets/css/animate.css">
 
 		<!-- Select2 CSS -->
 		<link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
 
-	
+
 
 		<!-- Datetimepicker CSS -->
 		<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
 
 		<!-- Datatable CSS -->
 		<link rel="stylesheet" href="assets/css/dataTables.bootstrap5.min.css">
-		
+
         <!-- Fontawesome CSS -->
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
@@ -60,23 +60,23 @@ require_once __DIR__ . "/../../src/config/session.php";
 
     </head>
     <body>
-		
+
 		<div id="global-loader" >
 			<div class="whirly-loader"> </div>
 		</div>
 
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
-		
-				
-		<?php include ("../../includes/header.php");?>
+
+
+		<?php include ("../../src/views/header.php");?>
 		<!-- /Header -->
 
 		<!-- Sidebar -->
-			<?php include ("../../includes/sidemenu.php");?>
+			<?php include ("../../src/views/sidemenu.php");?>
 		<!-- /Sidebar -->
 
-		
+
 
 			<div class="page-wrapper">
 				<div class="content settings-content">
@@ -99,8 +99,8 @@ require_once __DIR__ . "/../../src/config/session.php";
 					<div class="row">
 						<div class="col-xl-12">
 							 <div class="settings-wrapper d-flex">
-							
-							 
+
+
 								<div class="card flex-fill mb-0">
 									<div class="card-header">
 										<h4 class="fs-18 fw-bold">Bank Settings</h4>
@@ -111,21 +111,21 @@ require_once __DIR__ . "/../../src/config/session.php";
 											<div class="border-bottom mb-3">
 												<div class="card-title-head">
 													<h6 class="fs-16 fw-bold mb-2">
-														<span class="fs-16 me-2"><i class="ti ti-cash"></i></span> 
+														<span class="fs-16 me-2"><i class="ti ti-cash"></i></span>
 														Bank Information
 													</h6>
 												</div>
-											
-												
+
+
 												<div class="row">
-											
+
 													<div class="col-xl-4 col-lg-6 col-md-4">
 														<div class="mb-3">
 															<label class="form-label">
 																Bank Name  <span class="text-danger">*</span>
 															</label>
 															<input type="text" class="form-control"
-															 value="<?php echo $sitebank['bank_name'];?>" name="bank_name">
+															 value="<?php echo e($sitebank['bank_name'] ?? '');?>" name="bank_name">
 														</div>
 													</div>
 													<div class="col-xl-4 col-lg-6 col-md-4">
@@ -134,7 +134,7 @@ require_once __DIR__ . "/../../src/config/session.php";
 																Account Number  <span class="text-danger">*</span>
 															</label>
 															<input type="number" name="account_number"
-															 class="form-control"  value="<?php echo $sitebank['account_number'];?>">
+															 class="form-control"  value="<?php echo e($sitebank['account_number'] ?? '');?>">
 														</div>
 													</div>
 													<div class="col-md-4">
@@ -142,16 +142,16 @@ require_once __DIR__ . "/../../src/config/session.php";
 															<label class="form-label">
 																Account Name <span class="text-danger">*</span>
 															</label>
-															<input type="text" name="account_name" 
-															class="form-control"  value="<?php echo $sitebank['account_name'];?>">
+															<input type="text" name="account_name"
+															class="form-control"  value="<?php echo e($sitebank['account_name'] ?? '');?>">
 														</div>
 													</div>
-											
-												
+
+
 												</div>
 											</div>
-									
-											
+
+
 											<div class="text-end settings-bottom-btn mt-0">
 												<button type="button" class="btn btn-secondary me-2">Cancel</button>
 												<button type="submit" class="btn btn-primary" id="saveBtn">Save Changes</button>
@@ -160,7 +160,7 @@ require_once __DIR__ . "/../../src/config/session.php";
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
@@ -183,7 +183,7 @@ require_once __DIR__ . "/../../src/config/session.php";
 
 
 		<!-- jQuery -->
-        <script src="assets/js/jquery-3.7.1.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+        <script src="assets/js/jquery-3.7.1.min.js" ></script>
 <script>
 document.querySelector("#siteInfoForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -217,7 +217,7 @@ document.querySelector("#siteInfoForm").addEventListener("submit", function(e) {
         submitBtn.innerHTML = originalText;
     });
 
-	
+
 });
 
     // Reusable Toast
@@ -234,42 +234,41 @@ document.querySelector("#siteInfoForm").addEventListener("submit", function(e) {
 
 
         <!-- Feather Icon JS -->
-		<script src="assets/js/feather.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/feather.min.js" ></script>
 
 		<!-- Slimscroll JS -->
-		<script src="assets/js/jquery.slimscroll.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/jquery.slimscroll.min.js" ></script>
 
 		<!-- Datatable JS -->
-		<script src="assets/js/jquery.dataTables.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/dataTables.bootstrap5.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		
+		<script src="assets/js/jquery.dataTables.min.js" ></script>
+		<script src="assets/js/dataTables.bootstrap5.min.js" ></script>
+
 		<!-- Bootstrap Core JS -->
-        <script src="assets/js/bootstrap.bundle.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		
+        <script src="assets/js/bootstrap.bundle.min.js" ></script>
+
 		<!-- Datetimepicker JS -->
-		<script src="assets/js/moment.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/bootstrap-datetimepicker.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/moment.min.js" ></script>
+		<script src="assets/js/bootstrap-datetimepicker.min.js" ></script>
 
 		<!-- Quill JS -->
-    <script src="assets/plugins/quill/quill.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+    <script src="assets/plugins/quill/quill.min.js" ></script>
 
 		<!-- Select2 JS -->
-		<script src="assets/plugins/select2/js/select2.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/select2/js/select2.min.js" ></script>
 
 		<!-- Sticky-sidebar -->
-		<script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js" ></script>
+		<script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js" ></script>
 
 
 		<!-- Color Picker JS -->
-		<script src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js" ></script>
 
 		<!-- Custom JS -->
-		<script src="assets/js/theme-colorpicker.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/script.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-			   
-		   
-    <script src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="e801496cd9c52f594b01b48a-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"98610d973cbf7725","version":"2025.9.1","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"3ca157e612a14eccbb30cf6db6691c29","b":1}' crossorigin="anonymous"></script>
+		<script src="assets/js/theme-colorpicker.js" ></script>
+		<script src="assets/js/script.js" ></script>
+
+
 </body>
 
 </html>

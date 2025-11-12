@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once __DIR__ . "/../../src/config/session.php";
 ?>
 <!DOCTYPE html>
@@ -605,15 +605,15 @@ require_once __DIR__ . "/../../src/config/session.php";
       </div>
       <!-- /Header -->
 
-			
+
 			<!-- Header -->
-		
-		<?php include ("../../includes/header.php");?>
+
+		<?php include ("../../src/views/header.php");?>
 		<!-- /Header -->
 
 		<!-- Sidebar -->
-			<?php include ("../../includes/sidemenu.php");
-      
+			<?php include ("../../src/views/sidemenu.php");
+
       ?>
 		<!-- /Sidebar -->
 
@@ -636,8 +636,8 @@ require_once __DIR__ . "/../../src/config/session.php";
       <i data-feather="printer" class="feather-rotate-ccw"></i>
     </a>
   </li>
-           
-              
+
+
             </ul>
             <div class="page-btn">
               <a href="invoice.php" class="btn btn-primary"
@@ -701,40 +701,40 @@ $amountInWords = numberToWords($totalAmount);
                 <div class="col-md-5">
                   <p class="text-dark mb-2 fw-semibold">From</p>
                   <div>
-                    <h4 class="mb-1"><?php echo ucfirst($siteinfo['site_name']);?></h4>
-                    <p class="mb-1"><?php echo ucfirst($siteinfo['site_address']);?></p>
+                    <h4 class="mb-1"><?php echo e($siteinfo['site_name'] ?? 'N/A');?></h4>
+                    <p class="mb-1"><?php echo e($siteinfo['site_address'] ?? 'N/A');?></p>
                     <p class="mb-1">
                       Email :
                       <span class="text-dark"
                         ><a
-                  
-                        
-                          ><?php echo ucfirst($siteinfo['site_email']);?></a
+
+
+                          ><?php echo e($siteinfo['site_email'] ?? 'N/A');?></a
                         ></span
                       >
                     </p>
                     <p>
-                      Phone : <span class="text-dark"><?php echo ucfirst($siteinfo['site_phone']);?></span>
+                      Phone : <span class="text-dark"><?php echo e($siteinfo['site_phone'] ?? 'N/A');?></span>
                     </p>
                   </div>
                 </div>
                 <div class="col-md-5">
                   <p class="text-dark mb-2 fw-semibold">To</p>
                   <div>
-                    <h4 class="mb-1"><?php echo ucfirst($booking['customer_name']);?></h4>
-                    <p class="mb-1"><?php echo ucfirst($booking['customer_address']);?></p>
+                    <h4 class="mb-1"><?php echo e($booking['customer_name'] ?? 'N/A');?></h4>
+                    <p class="mb-1"><?php echo e($booking['customer_address'] ?? 'N/A');?></p>
                     <p class="mb-1">
                       Email :
                       <span class="text-dark"
                         ><a
-                          
-                        
-                          ><?php echo ucfirst($booking['customer_email']);?></a
+
+
+                          ><?php echo e($booking['customer_email'] ?? 'N/A');?></a
                         ></span
                       >
                     </p>
                     <p>
-                      Phone : <span class="text-dark"><?php echo ucfirst($booking['customer_phone']);?></span>
+                      Phone : <span class="text-dark"><?php echo e($booking['customer_phone'] ?? 'N/A');?></span>
                     </p>
                   </div>
                 </div>
@@ -747,7 +747,7 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
 ?>
 <span class="<?php echo $statusClass; ?> fs-10 px-1 rounded">
   <i class="ti ti-point-filled"></i>
-  <?php echo ucfirst($paymentStatus); ?>
+  <?php echo e($paymentStatus ?? 'pending'); ?>
 </span>
 
                     <div class="mt-3">
@@ -760,8 +760,8 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
                 <p class="fw-medium">
                   Invoice For :
                   <span class="text-dark fw-medium"
-                    ><?php echo ucfirst($booking['category_name'])." - ".ucfirst($booking['product_name'])
-                    ." - ".ucfirst($booking['car_type'])." - ".ucfirst($booking['car_info']);?></span
+                    ><?php echo e($booking['category_name'] ?? 'N/A') . " - " . e($booking['product_name'] ?? 'N/A')
+                    . " - " . e($booking['car_type'] ?? 'N/A') . " - " . e($booking['car_info'] ?? 'N/A');?></span
                   >
                 </p>
                 <div class="table-responsive mb-3">
@@ -777,36 +777,36 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
                     </thead>
                     <tbody>
                       <tr>
-                        <td><h6><?php echo ucfirst($booking['product_name']);?></h6></td>
+                        <td><h6><?php echo e($booking['product_name'] ?? 'N/A');?></h6></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
                         <td class="text-gray-9 fw-medium text-end">
-                          <?php echo $siteinfo['site_currency']."". ucfirst($booking['price']);?></td>
+                          <?php echo e($siteinfo['site_currency'] ?? 'R') . "" . e($booking['price'] ?? '0.00');?></td>
                       </tr>
                       <tr>
                         <td><h6>Call Out Fee</h6></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
                         <td class="text-gray-9 fw-medium text-end"></td>
-                        <td class="text-gray-9 fw-medium text-end"><?php echo $siteinfo['site_currency']."". ucfirst($booking['callout_fee']);?></td>
+                        <td class="text-gray-9 fw-medium text-end"><?php echo e($siteinfo['site_currency'] ?? 'R') . "" . e($booking['callout_fee'] ?? '0.00');?></td>
                       </tr>
-                
-                      
-                 
-                      
+
+
+
+
                     </tbody>
                   </table>
                 </div>
               </div>
               <div class="row border-bottom mb-3">
                 <div class="col-md-5 ms-auto mb-3">
-               
-                
-                
-                  
-             
-                  
+
+
+
+
+
+
                   <div
                     class="d-flex justify-content-between align-items-center mb-2 pe-3"
                   >
@@ -825,7 +825,7 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
                       <h6 class="mb-1">Terms and Conditions</h6>
                       <p>
                         <?php echo $siteinfo['site_terms']; ?>
-                     
+
                       </p>
                     </div>
                     <div class="mb-3">
@@ -835,18 +835,19 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
                   </div>
                 </div>
                 <div class="col-md-5">
+                  <?php if (!empty($admin['admin_signature'])): ?>
                   <div class="text-end">
                     <img
-                      src="<?php echo ($admin['signature_url']);?>"
+                      src="<?php echo e($admin['admin_signature']);?>"
                       class="img-fluid"
                       alt="sign"
-                        style="width: 120px; height: 40px;"
-
+                      style="width: 120px; height: 40px;"
                     />
                   </div>
+                  <?php endif; ?>
                   <div class="text-end mb-3">
-                    <h6 class="fs-14 fw-medium pe-3"><?php echo ucfirst($admin['username']);?></h6>
-                    <p><?php echo $admin['admin_role'];?></p>
+                    <h6 class="fs-14 fw-medium pe-3"><?php echo e($admin['username'] ?? 'Admin');?></h6>
+                    <p><?php echo e(($admin['is_super_admin'] ?? 'no') === 'yes' ? 'Super Admin' : 'Administrator');?></p>
                   </div>
                 </div>
               </div>
@@ -860,14 +861,14 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
                   />
                 </div>
                 <p class="text-dark mb-1">
-                  Payment Made Via bank transfer / Cheque in the name of <?php echo ucfirst($sitebank['account_name']);?>
+                  Payment Made Via bank transfer / Cheque in the name of <?php echo e($sitebank['account_name'] ?? 'N/A');?>
                 </p>
                 <div class="d-flex justify-content-center align-items-center">
                   <p class="fs-12 mb-0 me-3">
-                    Bank Name : <span class="text-dark"> <?php echo ucfirst($sitebank['bank_name']);?></span>
+                    Bank Name : <span class="text-dark"> <?php echo e($sitebank['bank_name'] ?? 'N/A');?></span>
                   </p>
                   <p class="fs-12 mb-0 me-3">
-                    Account Number : <span class="text-dark"> <?php echo ucfirst($sitebank['account_number']);?></span>
+                    Account Number : <span class="text-dark"> <?php echo e($sitebank['account_number'] ?? 'N/A');?></span>
                   </p>
                   <p class="fs-12 d-none">
                     IFSC : <span class="text-dark">HDFC0018159</span>
@@ -879,18 +880,18 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
           <!-- /Invoices -->
 
           <div class="d-flex justify-content-center align-items-center mb-4">
-          
-          
+
+
   <a
     href="#"
     class="btn btn-primary d-flex justify-content-center align-items-center me-2 print-btn"
   >              <i class="ti ti-printer me-2"></i>Print Invoice</a
             >
-        
-            
+
+
           </div>
         </div>
-       	<?php include ("../../includes/footer.php");?>
+       	<?php include ("../../src/views/footer.php");?>
       </div>
     </div>
     <!-- /Main Wrapper -->
@@ -902,77 +903,76 @@ $statusClass = $paymentStatus === 'paid' ? 'bg-success text-white' : 'bg-warning
     ></script>
     <script
       src="assets/js/jquery-3.7.1.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Feather Icon JS -->
     <script
       src="assets/js/feather.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Slimscroll JS -->
     <script
       src="assets/js/jquery.slimscroll.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Datatable JS -->
     <script
       src="assets/js/jquery.dataTables.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
     <script
       src="assets/js/dataTables.bootstrap5.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Datetimepicker JS -->
     <script
       src="assets/js/moment.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
     <script
       src="assets/js/bootstrap-datetimepicker.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Bootstrap Core JS -->
     <script
       src="assets/js/bootstrap.bundle.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Quill JS -->
     <script
       src="assets/plugins/quill/quill.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Select2 JS -->
     <script
       src="assets/plugins/select2/js/select2.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Color Picker JS -->
     <script
       src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <!-- Custom JS -->
     <script
       src="assets/js/theme-colorpicker.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
     <script
       src="assets/js/script.js"
-      type="273dda1991057fa509273705-text/javascript"
+
     ></script>
 
     <script
-      src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
       data-cf-settings="273dda1991057fa509273705-|49"
       defer
     ></script>
@@ -1005,7 +1005,7 @@ document.addEventListener('click', function(e) {
 </script>
 
 
-    
+
   </body>
 
 

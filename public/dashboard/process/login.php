@@ -1,5 +1,5 @@
 <?php
-include "./../../../includes/init.php";
+require_once __DIR__ . '/../../../src/config/init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -12,12 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $login = loginAdmin($conn, $email, $password);
 
-    // start session if login success
+    // Store admin info in session if login success
     if ($login['status'] === 'success') {
-        session_start();
         $_SESSION['admin_id'] = $login['admin']['id'];
     }
 
     echo json_encode($login);
 }
-?>

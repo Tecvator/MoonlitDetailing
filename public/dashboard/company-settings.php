@@ -69,11 +69,11 @@ require_once __DIR__ . "/../../src/config/session.php";
         <div class="main-wrapper">
 		
 				
-		<?php include ("../../includes/header.php");?>
+		<?php include ("../../src/views/header.php");?>
 		<!-- /Header -->
 
 		<!-- Sidebar -->
-			<?php include ("../../includes/sidemenu.php");?>
+			<?php include ("../../src/views/sidemenu.php");?>
 		<!-- /Sidebar -->
 
 		
@@ -308,7 +308,7 @@ require_once __DIR__ . "/../../src/config/session.php";
 
 
 		<!-- jQuery -->
-        <script src="assets/js/jquery-3.7.1.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+        <script src="assets/js/jquery-3.7.1.min.js" ></script>
 <script>
 document.querySelector("#siteInfoForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -397,42 +397,41 @@ function fillInAddress() {
 window.onload = initAutocomplete;
 </script>
         <!-- Feather Icon JS -->
-		<script src="assets/js/feather.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/feather.min.js" ></script>
 
 		<!-- Slimscroll JS -->
-		<script src="assets/js/jquery.slimscroll.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/jquery.slimscroll.min.js" ></script>
 
 		<!-- Datatable JS -->
-		<script src="assets/js/jquery.dataTables.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/dataTables.bootstrap5.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/jquery.dataTables.min.js" ></script>
+		<script src="assets/js/dataTables.bootstrap5.min.js" ></script>
 		
 		<!-- Bootstrap Core JS -->
-        <script src="assets/js/bootstrap.bundle.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+        <script src="assets/js/bootstrap.bundle.min.js" ></script>
 		
 		<!-- Datetimepicker JS -->
-		<script src="assets/js/moment.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/bootstrap-datetimepicker.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/moment.min.js" ></script>
+		<script src="assets/js/bootstrap-datetimepicker.min.js" ></script>
 
 		<!-- Quill JS -->
-    <script src="assets/plugins/quill/quill.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+    <script src="assets/plugins/quill/quill.min.js" ></script>
 
 		<!-- Select2 JS -->
-		<script src="assets/plugins/select2/js/select2.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/select2/js/select2.min.js" ></script>
 
 		<!-- Sticky-sidebar -->
-		<script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js" ></script>
+		<script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js" ></script>
 
 
 		<!-- Color Picker JS -->
-		<script src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js" ></script>
 
 		<!-- Custom JS -->
-		<script src="assets/js/theme-colorpicker.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
-		<script src="assets/js/script.js" type="e801496cd9c52f594b01b48a-text/javascript"></script>
+		<script src="assets/js/theme-colorpicker.js" ></script>
+		<script src="assets/js/script.js" ></script>
 			   
 		   
-    <script src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="e801496cd9c52f594b01b48a-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"98610d973cbf7725","version":"2025.9.1","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"3ca157e612a14eccbb30cf6db6691c29","b":1}' crossorigin="anonymous"></script>
 </body>
 
 </html>

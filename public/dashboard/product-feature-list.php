@@ -93,11 +93,11 @@ require_once __DIR__ . "/../../src/config/session.php";
     <div class="main-wrapper">
     		<!-- Header -->
 		
-		<?php include ("../../includes/header.php");?>
+		<?php include ("../../src/views/header.php");?>
 		<!-- /Header -->
 
 		<!-- Sidebar -->
-			<?php include ("../../includes/sidemenu.php");?>
+			<?php include ("../../src/views/sidemenu.php");?>
 		<!-- /Sidebar -->
 
 
@@ -334,88 +334,86 @@ document.addEventListener("click", function(e) {
     <!-- jQuery -->
     <script
       src="assets/js/jquery-3.7.1.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Bootstrap Core JS -->
     <script
       src="assets/js/bootstrap.bundle.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Feather Icon JS -->
     <script
       src="assets/js/feather.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Slimscroll JS -->
     <script
       src="assets/js/jquery.slimscroll.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Datatable JS -->
     <script
       src="assets/js/jquery.dataTables.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
     <script
       src="assets/js/dataTables.bootstrap5.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Quill JS -->
     <script
       src="assets/plugins/quill/quill.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Select2 JS -->
     <script
       src="assets/plugins/select2/js/select2.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Datetimepicker JS -->
     <script
       src="assets/js/moment.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
     <script
       src="assets/js/bootstrap-datetimepicker.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Bootstrap Tagsinput JS -->
     <script
       src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Color Picker JS -->
     <script
       src="assets/plugins/%40simonwep/pickr/pickr.es5.min.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <!-- Custom JS -->
     <script
       src="assets/js/theme-colorpicker.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
     <script
       src="assets/js/script.js"
-      type="9c1987c811a42ee0412dcfad-text/javascript"
+      
     ></script>
 
     <script
-      src="../../cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
       data-cf-settings="9c1987c811a42ee0412dcfad-|49"
       defer
     ></script>
     <script
-      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
    
     ></script>
   </body>
