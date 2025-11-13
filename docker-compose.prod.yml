@@ -5,25 +5,6 @@
 
 services:
   # ================================
-  # DATABASE (MySQL) - Production
-  # ================================
-  db:
-    restart: always
-    command:
-      - --default-authentication-plugin=mysql_native_password
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --max_connections=200
-      - --innodb_buffer_pool_size=512M
-    volumes:
-      # In production, you may want to backup the init scripts after first run
-      - db_data:/var/lib/mysql
-      # Comment out init scripts after first deployment to prevent re-initialization
-      # - ./docker/mysql/init:/docker-entrypoint-initdb.d
-    # Don't expose database port in production (remove port mapping for security)
-    ports: []
-
-  # ================================
   # PHP APPLICATION - Production
   # ================================
   web:
@@ -43,8 +24,8 @@ services:
 
     volumes:
       # In production, use read-only mounts for application code
-      - ./public:/var/www/html:ro
-      - ./src:/var/www/src:ro
+      - ./public:/var/www/html
+      - ./src:/var/www/src
 
       # Only uploads directory is writable
       - uploads_data:/var/www/html/uploads
@@ -57,10 +38,13 @@ services:
         max-file: "3"
 
 # ================================
+# PRODUCTION NETWORKS
+# ================================
+networks:
+  moonlit_network:
+
+# ================================
 # PRODUCTION VOLUMES
 # ================================
 volumes:
-  db_data:
-    driver: local
   uploads_data:
-    driver: local
