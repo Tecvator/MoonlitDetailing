@@ -1,46 +1,35 @@
-# ================================
-# PRODUCTION OVERRIDES
-# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-# ================================
-
 services:
-  # ================================
-  # PHP APPLICATION - Production
-  # ================================
   web:
-    restart: always
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+    container_name: moonlit_web
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      # Override with production values from .env
-      APP_ENV: production
-      APP_DEBUG: false
-      APP_URL: ${PROD_APP_URL:-https://moonlit.trusttino.com}
-      API_BASE_URL: ${PROD_API_BASE_URL:-https://moonlit.trusttino.com/dashboard/api.php}
-
-      # Production database (can be external)
-      DB_HOST: ${PROD_DB_HOST:-db}
-      DB_NAME: ${PROD_DB_NAME:-moonlit}
-      DB_USER: ${PROD_DB_USER}
-      DB_PASSWORD: ${PROD_DB_PASSWORD}
-
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      API_BASE_URL: ${API_BASE_URL}
     volumes:
-      # In production, use read-only mounts for application code
       - ./public:/var/www/html
       - ./src:/var/www/src
-
-      # Only uploads directory is writable
       - uploads_data:/var/www/html/uploads
-
+    ports:
+      - "8080:80"
     networks:
       - moonlit_network
 
-# ================================
-# PRODUCTION NETWORKS
-# ================================
 networks:
   moonlit_network:
 
-# ================================
-# PRODUCTION VOLUMES
-# ================================
 volumes:
   uploads_data:
