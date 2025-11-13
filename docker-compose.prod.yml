@@ -30,12 +30,8 @@ services:
       # Only uploads directory is writable
       - uploads_data:/var/www/html/uploads
 
-    # Production logging
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    networks:
+      - moonlit_network
 
 # ================================
 # PRODUCTION NETWORKS
