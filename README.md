@@ -361,8 +361,10 @@ docker-compose exec db mysqldump -u root -p moonlit > backup.sql
 
 # Restore database
 docker-compose exec -T db mysql -u root -p moonlit < backup.sql
-```
 
+# Refresh app on server
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
 ## 📝 License
 
 Proprietary - All rights reserved
