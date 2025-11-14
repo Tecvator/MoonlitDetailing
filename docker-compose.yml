@@ -3,6 +3,7 @@ services:
   # DATABASE (MySQL)
   # ================================
   db:
+    profiles: ["local"]
     image: mysql:8.0
     container_name: moonlit_db
     restart: unless-stopped
