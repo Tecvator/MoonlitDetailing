@@ -41,6 +41,7 @@ services:
   # PHP APPLICATION (Apache + PHP-FPM)
   # ================================
   web:
+    profiles: ["local"]
     build:
       context: .
       dockerfile: docker/php/Dockerfile
