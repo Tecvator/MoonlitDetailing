@@ -41,7 +41,6 @@ services:
   # PHP APPLICATION (Apache + PHP-FPM)
   # ================================
   web:
-    profiles: ["local"]
     build:
       context: .
       dockerfile: docker/php/Dockerfile
@@ -79,9 +78,6 @@ services:
       - ./docker/apache:/etc/apache2/sites-available
     ports:
       - "${WEB_PORT}:80"
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - moonlit_network
 
