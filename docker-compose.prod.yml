@@ -1,0 +1,35 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+    container_name: moonlit_web
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      API_BASE_URL: ${API_BASE_URL}
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+      - uploads_data:/var/www/html/uploads
+    ports:
+      - "8080:80"
+    networks:
+      - moonlit_network
+
+networks:
+  moonlit_network:
+
+volumes:
+  uploads_data:
